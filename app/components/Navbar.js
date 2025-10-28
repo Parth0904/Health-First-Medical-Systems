@@ -71,7 +71,7 @@ export default function Navbar() {
         style={{ width: `${scrollProgress}%` }}
       ></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={menuRef}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="shrink-0">
@@ -139,9 +139,10 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ✅ Mobile Links */}
+      {/* ✅ Mobile Links (inside same ref now) */}
       {isOpen && (
         <motion.div
+          ref={menuRef}
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
