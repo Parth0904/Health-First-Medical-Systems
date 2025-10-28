@@ -158,7 +158,7 @@ export default function ProductsPage() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.18 }}
-                      className="absolute z-20 mt-2 w-full bg-white rounded-lg shadow-lg"
+                      className="absolute z-20 mt-2 w-full bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto"
                     >
                       {categories.map((cat) => (
                         <button
