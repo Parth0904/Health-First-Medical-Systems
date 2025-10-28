@@ -38,7 +38,7 @@ export default function ProductsPage() {
   return (
     <section
       id="products"
-      className="bg-blue-50 py-20 px-6 md:px-20 text-center relative min-h-screen"
+      className="bg-blue-50 py-20 px-6 md:px-20 text-center relative min-h-screen mt-4"
     >
       {/* Heading */}
       <motion.h2
@@ -156,7 +156,7 @@ export default function ProductsPage() {
       <AnimatePresence>
         {selectedProduct && (
           <motion.div
-            className="fixed inset-0 bg-black/60 flex justify-center items-center z-45 p-4"
+            className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
