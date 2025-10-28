@@ -1,0 +1,12 @@
+# robots.txt for HealthFirst Medical Systems
+User-agent: *
+Allow: /
+
+# Prevent crawling of sensitive or unused folders
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /temp/
+
+# Sitemap location (important for Google)
+Sitemap: https://www.healthfirstmedicalsystems.com/sitemap.xml
