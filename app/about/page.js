@@ -21,7 +21,7 @@ export default function AboutSection() {
             src="/hero.webp"
             alt="About Health First Medical Systems"
             loading="eager"
-            fetchpriority="high"
+            fetchPriority="high"
             width={400}
             height={400}
             className="rounded-2xl shadow-lg"

@@ -1,11 +1,53 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function Navbar() {
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const pathname = usePathname();
+  const menuRef = useRef();
+
+  // ✅ Hide navbar when scrolling down
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY) setShowNavbar(false);
+      else setShowNavbar(true);
+      setLastScrollY(window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
+  // ✅ Scroll progress bar logic
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const progress = (scrollTop / docHeight) * 100;
+      setScrollProgress(progress);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // ✅ Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) document.addEventListener("mousedown", handleClickOutside);
+    else document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen]);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -17,8 +59,19 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-white text-gray-800 fixed w-full z-50 shadow-md border-b border-gray-100 top-0">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <motion.nav
+      initial={{ y: 0 }}
+      animate={{ y: showNavbar ? 0 : -80 }}
+      transition={{ duration: 0.3 }}
+      className="bg-white text-gray-800 fixed w-full z-50 shadow-md border-b border-gray-100 top-0"
+    >
+      {/* ✅ Scroll progress bar */}
+      <div
+        className="absolute bottom-0 left-0 h-0.5 bg-blue-600 transition-all duration-200"
+        style={{ width: `${scrollProgress}%` }}
+      ></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={menuRef}>
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="shrink-0">
@@ -86,9 +139,14 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Links */}
+      {/* ✅ Mobile Links */}
       {isOpen && (
-        <div className="md:hidden bg-blue-50 border-t border-blue-100">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="md:hidden bg-blue-50 border-t border-blue-100"
+        >
           {links.map((link, index) => (
             <Link
               key={index}
@@ -101,8 +159,8 @@ export default function Navbar() {
               {link.name}
             </Link>
           ))}
-        </div>
+        </motion.div>
       )}
-    </nav>
+    </motion.nav>
   );
 }

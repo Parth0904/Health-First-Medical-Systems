@@ -24,7 +24,7 @@ export default function HomePage() {
       name: "IndiaMart",
       logo: "/indiamart.webp",
       rating: 4.7,
-      reviews: "14+ products",
+      reviews: "14+ reviews",
       link: "https://www.indiamart.com/health-first-medicalsystems/",
     },
   ];
@@ -94,7 +94,24 @@ export default function HomePage() {
     <main className="overflow-x-hidden">
 
       {/* ================= HERO SECTION ================= */}
-      <section className="bg-linear-to-r from-blue-50 to-blue-100 min-h-screen flex flex-col md:flex-row items-center justify-between px-8 md:px-20 py-16 m-4 mt-20 rounded-3xl">
+      <section className="bg-linear-to-r from-blue-50 to-blue-100 min-h-screen flex flex-col md:flex-row items-center justify-between px-8 md:mt-20 rounded-3xl">
+        {/* Right - Slideshow */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mt-10 md:mt-0 p-14"
+        >
+          <Image
+            src={images[currentImage]}
+            alt="Health First Medical Systems"
+            loading="eager"
+            width={1000}
+            height={500}
+            className="rounded-2xl shadow-lg transition-all duration-700"
+          />
+        </motion.div>
+
         {/* Left */}
         <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="max-w-xl">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4">
@@ -128,22 +145,6 @@ export default function HomePage() {
           </div>
         </motion.div>
 
-        {/* Right - Slideshow */}
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mt-10 md:mt-0 p-14"
-        >
-          <Image
-            src={images[currentImage]}
-            alt="Health First Medical Systems"
-            loading="eager"
-            width={1000}
-            height={500}
-            className="rounded-2xl shadow-lg transition-all duration-700"
-          />
-        </motion.div>
       </section>
 
       {/* ================= ABOUT SECTION ================= */}

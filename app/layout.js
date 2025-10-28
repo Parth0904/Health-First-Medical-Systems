@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import TopLoader from "./components/TopLoader";
 import Script from "next/script";
 import dynamic from 'next/dynamic';
 const Navbar = dynamic(() => import('./components/Navbar'));
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <WhatsAppButton />
         <Navbar />
+        <TopLoader />
         {children}
         <Footer />
 
