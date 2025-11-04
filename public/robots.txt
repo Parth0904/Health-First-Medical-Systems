@@ -1,12 +1,9 @@
-# robots.txt for HealthFirst Medical Systems
+# *
 User-agent: *
 Allow: /
 
-# Prevent crawling of sensitive or unused folders
-Disallow: /api/
-Disallow: /admin/
-Disallow: /private/
-Disallow: /temp/
+# Host
+Host: https://healthfirstmedicalsystems.vercel.app/
 
-# Sitemap location (important for Google)
-Sitemap: https://www.healthfirstmedicalsystems.com/sitemap.xml
+# Sitemaps
+Sitemap: https://healthfirstmedicalsystems.vercel.app/sitemap.xml
