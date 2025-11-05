@@ -93,14 +93,13 @@ export default function RootLayout({ children }) {
               "@type": "Organization",
               name: "Health First Medical Systems",
               url: "https://healthfirstmedicalsystems.vercel.app",
-              logo: "https://healthfirstmedicalsystems.vercel.app/logo.png",
+              logo: "https://healthfirstmedicalsystems.vercel.app/logo.webp",
               sameAs: [
-                "https://www.facebook.com/yourpage",
-                "https://www.instagram.com/yourpage",
+                
               ],
               contactPoint: {
                 "@type": "ContactPoint",
-                telephone: "+91-XXXXXXXXXX",
+                telephone: "08046074634",
                 contactType: "Customer Service",
                 areaServed: "IN",
                 availableLanguage: "English",
