@@ -37,92 +37,107 @@ export default function ContactSection() {
   };
 
   return (
-    <section
-      id="contact"
-      className="bg-white py-20 px-8 md:px-20 flex flex-col md:flex-row items-center justify-between gap-10"
-    >
-      {/* Left Side - Text */}
-      <motion.div
-        initial={{ opacity: 0, x: -50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="w-full md:w-1/2"
-      >
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-          Get in Touch
-        </h2>
-        <p className="text-gray-600 mb-6">
-          Have questions or need more information about our medical systems?
-          Fill out the form, and our team will get back to you promptly.
-        </p>
+    <section className="text-gray-600 body-font relative">
+      <div className="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap">
+        <div className="lg:w-2/3 md:w-1/2 bg-gray-300 rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative">
+          <iframe
+            width="100%"
+            height="100%"
+            className="absolute inset-0"
+            title="map"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3765.6735251794403!2d73.20208067419!3d19.296558645013434!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be79121c8ad43f1%3A0x2cbee773c3c2bf55!2sHealth%20First%20Medical%20Systems!5e0!3m2!1sen!2sin!4v1768541184251!5m2!1sen!2sin"
+            style={{
+              border: 0,
+              filter: "contrast(1.2) opacity(0.4)",
+              overflow: "hidden",
+            }}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
 
-        <div className="text-gray-700 space-y-2">
-          <p>📞 Call 08046074634</p>
-          <p>👨‍💻 Shankar Dattatraya Shinde (Proprietor)</p>
-          <p>
-            📍 Health First Medical Systems A304, Madhuban Society, Railway
-            Power House Road Mataji Mandir Road, Titwala, Kalyan, Thane-421605,
-            Maharashtra, India
+          <div className="bg-white relative flex flex-wrap py-6 rounded shadow-md">
+            <div className="lg:w-1/2 px-6">
+              <h2 className="title-font font-semibold text-gray-900 tracking-widest text-xs">
+                ADDRESS
+              </h2>
+              <p className="mt-1">
+                📍 Health First Medical Systems A304, Madhuban Society, Railway
+                Power House Road Mataji Mandir Road, Titwala, Kalyan,
+                Thane-421605, Maharashtra, India
+              </p>
+            </div>
+            <div className="lg:w-1/2 px-6 mt-4 lg:mt-0">
+              <h2 className="title-font font-semibold text-gray-900 tracking-widest text-xs">
+                Proprietor
+              </h2>
+              <a className="text-blue-500 leading-relaxed">
+                👨‍💻 Shankar Dattatraya Shinde
+              </a>
+              <h2 className="title-font font-semibold text-gray-900 tracking-widest text-xs mt-4">
+                PHONE
+              </h2>
+              <p className="leading-relaxed">📞 08046074634</p>
+            </div>
+          </div>
+        </div>
+        <div className="lg:w-1/3 md:w-1/2 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
+          <h2 className="text-gray-900 text-lg mb-1 font-medium title-font">
+            Get In Touch
+          </h2>
+          <p className="leading-relaxed mb-5 text-gray-600">
+            Have questions or need more information about our medical systems?
+            Fill out the form, and our team will get back to you promptly.
+          </p>
+          <div className="relative mb-4">
+            <label htmlFor="name" className="leading-7 text-sm text-gray-600">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              className="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+            />
+          </div>
+          <div className="relative mb-4">
+            <label htmlFor="email" className="leading-7 text-sm text-gray-600">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              className="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+            />
+          </div>
+          <div className="relative mb-4">
+            <label htmlFor="message" className="leading-7 text-sm text-gray-600">
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              className="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`${
+              loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+            } text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 w-full`}
+          >
+            {loading ? "Sending..." : "Send Message"}
+          </button>
+
+          {status && (
+            <p className="text-center text-sm mt-4 font-medium">{status}</p>
+          )}
+          <p className="text-xs text-gray-500 mt-3">
+            Thank you for contacting with us we will reach out to you soon ...
           </p>
         </div>
-      </motion.div>
-
-      {/* Right Side - Form */}
-      <motion.form
-        onSubmit={handleSubmit}
-        initial={{ opacity: 0, x: 50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="w-full md:w-1/2 bg-blue-50 rounded-2xl p-8 shadow-lg"
-      >
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Name</label>
-          <input
-            type="text"
-            name="name"
-            required
-            className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Email</label>
-          <input
-            type="email"
-            name="email"
-            required
-            className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">
-            Message
-          </label>
-          <textarea
-            name="message"
-            rows="4"
-            required
-            className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          ></textarea>
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`${
-            loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
-          } text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 w-full`}
-        >
-          {loading ? "Sending..." : "Send Message"}
-        </button>
-
-        {status && (
-          <p className="text-center text-sm mt-4 font-medium">{status}</p>
-        )}
-      </motion.form>
+      </div>
     </section>
   );
 }

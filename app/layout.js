@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import TopLoader from "./components/TopLoader";
+import ScrollToTop from "./components/ScrollToTop";
 import Script from "next/script";
 import dynamic from "next/dynamic";
 
@@ -80,6 +81,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         <TopLoader />
         {children}
+        <ScrollToTop />
         <Footer />
 
         {/* --- Organization Schema --- */}

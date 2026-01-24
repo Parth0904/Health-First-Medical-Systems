@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import CheckIcon from "../components/CheckIcon";
 
 export default function AboutSection() {
   return (
@@ -47,9 +48,9 @@ export default function AboutSection() {
             Oximeter, X Ray Machine, etc.
           </p>
           <ul className="text-gray-700 space-y-3">
-            <li>✅ Wide range of advanced medical systems</li>
-            <li>✅ Trusted by healthcare professionals and organizations</li>
-            <li>✅ Strong commitment to quality, service, and reliability</li>
+            <li className="flex gap-2"><CheckIcon /> Wide range of advanced medical systems</li>
+            <li className="flex gap-2"><CheckIcon/> Trusted by healthcare professionals and organizations</li>
+            <li className="flex gap-2"><CheckIcon/> Strong commitment to quality, service, and reliability</li>
           </ul>
         </motion.div>
       </section>

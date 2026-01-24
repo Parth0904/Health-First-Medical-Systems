@@ -62,7 +62,7 @@ export default function Navbar() {
     <motion.nav
       initial={{ y: 0 }}
       animate={{ y: showNavbar ? 0 : -80 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
       className="bg-white text-gray-800 fixed w-full z-50 shadow-md border-b border-gray-100 top-0"
     >
       {/* ✅ Scroll progress bar */}

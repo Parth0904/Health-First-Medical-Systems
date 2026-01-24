@@ -2,7 +2,13 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Papa from "papaparse";
-import { ChevronDown, X, ArrowUp } from "lucide-react";
+import {
+  ChevronDown,
+  X,
+  ArrowUp,
+  Search,
+  SlidersHorizontal,
+} from "lucide-react";
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -11,45 +17,40 @@ export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState(["All"]);
   const [loading, setLoading] = useState(true);
-  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [showSearchBar, setShowSearchBar] = useState(true);
 
   const wrapperRef = useRef(null);
 
-  // Fetch data from Google Sheets
+  // Fetch data from server
   useEffect(() => {
-    setLoading(true);
-    fetch(
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vSquIBj5dT4sJTc2h_a1spd8o_thibULUFy2MQfCWOEb1A90oYEk7Q60kxMorJj8VY4SRc5vZppTb1o/pub?output=csv"
-    )
-      .then((res) => res.text())
-      .then((csv) => {
-        const data = Papa.parse(csv, { header: true }).data;
-        const validProducts = data.filter((p) => p?.Name && p?.Category);
-        setProducts(validProducts);
-        const uniqueCategories = [
-          "All",
-          ...new Set(validProducts.map((p) => (p.Category || "").trim())),
-        ];
-        setCategories(uniqueCategories);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+  fetch("/api/products")
+    .then(res => res.json())
+    .then(setProducts)
+    .finally(() => setLoading(false));
+}, []);
+
 
   // Filtered products
-  const filteredProducts =
-    selectedCategory === "All"
-      ? products
-      : products.filter((p) => p.Category === selectedCategory);
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory =
+      selectedCategory === "All" || p.Category === selectedCategory;
 
-  // Scroll-to-top visibility
+    const q = searchQuery.toLowerCase();
+
+    const matchesSearch =
+      !q ||
+      p.Name?.toLowerCase().includes(q) ||
+      p.Category?.toLowerCase().includes(q) ||
+      p.Manufacturer?.toLowerCase().includes(q) ||
+      p["Model Number"]?.toLowerCase().includes(q);
+
+    return matchesCategory && matchesSearch;
+  });
   useEffect(() => {
-    const onScroll = () => setShowScrollTop(window.scrollY > 300);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+    setSearchQuery("");
+  }, [selectedCategory]);
 
   // Close dropdown or modal on outside click / Escape
   useEffect(() => {
@@ -77,11 +78,23 @@ export default function ProductsPage() {
 
   // Lock body scroll when dropdown or modal open
   useEffect(() => {
-    document.body.style.overflow = isOpen || selectedProduct ? "hidden" : "auto";
+    document.body.style.overflow =
+      isOpen || selectedProduct ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
   }, [isOpen, selectedProduct]);
+
+  // ✅ Hide searchbar when scrolling down
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY) setShowSearchBar(false);
+      else setShowSearchBar(true);
+      setLastScrollY(window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
     <section
@@ -110,78 +123,73 @@ export default function ProductsPage() {
         </div>
       ) : (
         <>
-          {/* Category Filter */}
-          <div className="mb-10 relative">
-            {/* Desktop */}
-            <div className="hidden md:flex justify-center flex-wrap gap-3">
-              {categories.map((cat) => (
+          {/* Filter Bar: Search + Categories */}
+          <motion.div
+            initial={{ y: 0 }}
+            animate={{ y: showSearchBar ? 0 : -160 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            className="sticky top-16 z-30 bg-blue-50/90 backdrop-blur border-b border-gray-200 mb-8"
+          >
+            <div className="max-w-6xl mx-auto px-4 py-4 bg-white/95 rounded-xl shadow-lg">
+              <div className="relative flex items-center">
+                {/* Search icon */}
+                <Search
+                  size={20}
+                  className="absolute left-4 text-gray-400 pointer-events-none"
+                />
+
+                {/* Search input */}
+                <input
+                  type="text"
+                  placeholder="Search by name, model, brand, category…"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-12 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+
+                {/* Filter icon */}
                 <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                    selectedCategory === cat
-                      ? "bg-blue-600 text-white shadow-md"
-                      : "bg-white text-gray-700 hover:bg-blue-100"
-                  }`}
+                  onClick={() => setIsOpen((v) => !v)}
+                  className="absolute right-3 flex items-center justify-center h-9 w-9 rounded-md bg-blue-50 hover:bg-blue-100 text-blue-600"
+                  aria-label="Filter categories"
+                  aria-expanded={isOpen}
                 >
-                  {cat}
+                  <SlidersHorizontal size={18} />
                 </button>
-              ))}
-            </div>
+              </div>
 
-            {/* Mobile Dropdown */}
-            <div className="md:hidden relative" ref={wrapperRef}>
-              <button
-                onClick={() => setIsOpen((v) => !v)}
-                className="flex items-center justify-between w-full bg-white px-4 py-3 rounded-lg shadow"
-                aria-expanded={isOpen}
-              >
-                <span className="font-medium text-gray-700">
-                  {selectedCategory}
-                </span>
-                {isOpen ? <X size={18} /> : <ChevronDown size={18} />}
-              </button>
-
+              {/* Categories dropdown */}
               <AnimatePresence>
                 {isOpen && (
-                  <>
-                    <motion.div
-                      key="backdrop"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="fixed inset-0 z-10 bg-black/30 backdrop-blur-sm"
-                    />
-                    <motion.div
-                      key="menu"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.18 }}
-                      className="absolute z-20 mt-2 w-full bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto"
-                    >
-                      {categories.map((cat) => (
-                        <button
-                          key={cat}
-                          onClick={() => {
-                            setSelectedCategory(cat);
-                            setIsOpen(false);
-                          }}
-                          className={`block w-full text-left px-4 py-2 text-sm ${
-                            selectedCategory === cat
-                              ? "bg-blue-100 text-blue-700"
-                              : "hover:bg-gray-100 text-gray-700"
-                          }`}
-                        >
-                          {cat}
-                        </button>
-                      ))}
-                    </motion.div>
-                  </>
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.18 }}
+                    className="absolute z-20 mt-2 w-full bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto"
+                    ref={wrapperRef}
+                  >
+                    {categories.map((cat) => (
+                      <button
+                        key={cat}
+                        onClick={() => {
+                          setSelectedCategory(cat);
+                          setIsOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm ${
+                          selectedCategory === cat
+                            ? "bg-blue-100 text-blue-700"
+                            : "hover:bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </motion.div>
                 )}
               </AnimatePresence>
             </div>
-          </div>
+          </motion.div>
 
           {/* Product Grid */}
           <motion.div
@@ -246,8 +254,9 @@ export default function ProductsPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.18 }}
-              className="bg-white rounded-2xl shadow-lg max-w-lg w-full p-6 relative overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-2xl shadow-lg max-w-5xl w-full p-6 relative overflow-y-auto max-h-[90vh]"
             >
+              {/* Close */}
               <button
                 onClick={() => setSelectedProduct(null)}
                 className="absolute top-4 right-4 text-gray-600 hover:text-black"
@@ -255,79 +264,91 @@ export default function ProductsPage() {
                 <X size={22} />
               </button>
 
-              <img
-                src={selectedProduct["Image URL"]}
-                alt={selectedProduct.Name}
-                width={400}
-                height={250}
-                className="w-full h-64 object-cover rounded-lg mb-4"
-              />
+              <div className="lg:w-4/5 mx-auto flex flex-wrap">
+                {/* Left content */}
+                <div className="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
+                  <h2 className="text-sm title-font text-gray-500 tracking-widest">
+                    {selectedProduct.Manufacturer || "BRAND"}
+                  </h2>
 
-              <h2 className="text-2xl font-bold mb-2 text-gray-800">
-                {selectedProduct.Name}
-              </h2>
+                  <h1 className="text-gray-900 text-3xl title-font font-medium mb-4">
+                    {selectedProduct.Name}
+                  </h1>
 
-              <p className="text-gray-700 mb-4">
-                {selectedProduct.Description}
-              </p>
+                  {/* Tabs (static for now) */}
+                  <div className="flex mb-4">
+                    <span className=">grow text-blue-600 border-b-2 border-blue-600 py-2 text-lg px-1">
+                      Description
+                    </span>
+                  </div>
 
-              <div className="text-gray-700 text-sm space-y-2">
-                <p>
-                  <strong>Manufacturer:</strong> {selectedProduct.Manufacturer}
-                </p>
-                <p>
-                  <strong>Model Number:</strong>{" "}
-                  {selectedProduct["Model Number"]}
-                </p>
-                <p>
-                  <strong>Category:</strong> {selectedProduct.Category}
-                </p>
-                <p>
-                  <strong>Regulatory Approval:</strong>{" "}
-                  {selectedProduct["Regulatory Approval"]}
-                </p>
-                <p>
-                  <strong>Key Features:</strong>{" "}
-                  {selectedProduct["Key Features"]}
-                </p>
-                <p>
-                  <strong>Warranty:</strong> {selectedProduct.Warranty}
-                </p>
-                <p>
-                  <strong>Price:</strong> {selectedProduct.Price}
-                </p>
+                  <p className="leading-relaxed mb-4">
+                    {selectedProduct.Description}
+                  </p>
+
+                  <div className="flex border-t border-gray-200 py-2">
+                    <span className="text-gray-500">Model Number</span>
+                    <span className="ml-auto text-gray-900">
+                      {selectedProduct["Model Number"]}
+                    </span>
+                  </div>
+
+                  <div className="flex border-t border-gray-200 py-2">
+                    <span className="text-gray-500">Category</span>
+                    <span className="ml-auto text-gray-900">
+                      {selectedProduct.Category}
+                    </span>
+                  </div>
+
+                  <div className="flex border-t border-gray-200 py-2">
+                    <span className="text-gray-500">Regulatory Approval</span>
+                    <span className="ml-auto text-gray-900">
+                      {selectedProduct["Regulatory Approval"]}
+                    </span>
+                  </div>
+
+                  <div className="flex border-t border-b mb-6 border-gray-200 py-2">
+                    <span className="text-gray-500">Warranty</span>
+                    <span className="ml-auto text-gray-900">
+                      {selectedProduct.Warranty}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center">
+                    <span className="title-font font-medium text-2xl text-gray-900">
+                      {selectedProduct.Price}
+                    </span>
+
+                    <button
+                      className="flex ml-auto text-white bg-blue-600 border-0 py-2 px-6 hover:bg-blue-700 rounded"
+                      onClick={() => {
+                        const message = `Hi, I'm interested in the product "${selectedProduct.Name}". Please share more details.`;
+                        window.open(
+                          `https://wa.me/9920986401?text=${encodeURIComponent(
+                            message
+                          )}`,
+                          "_blank"
+                        );
+                      }}
+                    >
+                      Enquire
+                    </button>
+                  </div>
+                </div>
+
+                {/* Right image */}
+                <img
+                  alt={selectedProduct.Name}
+                  className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
+                  src={selectedProduct["Image URL"]}
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='100%25' height='100%25' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23707f8c' font-size='18'%3EImage not found%3C/text%3E%3C/svg%3E";
+                  }}
+                />
               </div>
-
-              <button
-                className="mt-6 px-5 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition cursor-pointer"
-                onClick={() => {
-                  const message = `Hi, I'm interested in the product "${selectedProduct.Name}" from category ${selectedProduct.Category}. Can you please share more details?`;
-                  const url = `https://wa.me/9920986401?text=${encodeURIComponent(
-                    message
-                  )}`;
-                  window.open(url, "_blank");
-                }}
-              >
-                Enquire Now on WhatsApp
-              </button>
             </motion.div>
           </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Scroll to Top */}
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 40 }}
-            onClick={scrollToTop}
-            className="fixed bottom-24 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-all"
-            aria-label="Scroll to top"
-          >
-            <ArrowUp size={28} />
-          </motion.button>
         )}
       </AnimatePresence>
     </section>

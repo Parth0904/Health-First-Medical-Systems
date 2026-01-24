@@ -118,7 +118,7 @@ export default function HomePage() {
             Health First Medical Systems
           </h1>
           <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6">
-            Health First Medical Systems is Established as a Proprietor firm in the year 2020 at Kalyan (Maharashtra, India), We “Shree Digamber Chemicals” are a leading Wholesale Trader, Service Provider and Retailer of a wide range of ECG Machine, Pulse Oximeter, X Ray Machine, etc.
+            This is an official site owned by Shankar Dattatraya Shinde. Here you can find the products of Health First Medical Systems and learn more about us.
           </p>
 
           <PrimaryButton text="View Products" link="/products" />
