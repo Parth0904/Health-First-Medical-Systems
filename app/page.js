@@ -9,22 +9,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-const PrimaryButton = ({ text, link }) => (
+/* ---------- Reusable Button ---------- */
+const PrimaryButton = ({ text, link, variant = "primary" }) => (
   <Link href={link}>
-    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-md m-2 cursor-pointer">
+    <button
+      className={`px-8 py-4 rounded-full font-semibold transition-all shadow-md
+        ${
+          variant === "primary"
+            ? "bg-blue-600 text-white hover:bg-blue-700"
+            : "border border-blue-600 text-blue-600 hover:bg-blue-50"
+        }`}
+    >
       {text}
     </button>
   </Link>
 );
 
 export default function HomePage() {
-  // =================== DATA ===================
+  /* ---------- DATA ---------- */
   const platforms = [
     {
       name: "IndiaMart",
       logo: "/indiamart.webp",
-      rating: 4.7,
-      reviews: "14+ reviews",
+      rating: "4.7★",
+      reviews: "14+ verified reviews",
       link: "https://www.indiamart.com/health-first-medicalsystems/",
     },
   ];
@@ -32,211 +40,155 @@ export default function HomePage() {
   const systems = [
     {
       name: "Tricog ECG Machine",
-      price: "₹75,000/Piece",
       desc: "Compact and accurate ECG machine ideal for cardiac diagnostics.",
-      link: "https://www.indiamart.com/proddetail/tricog-ecg-machine-2853725495512.html",
       img: "https://5.imimg.com/data5/ANDROID/Default/2024/3/404768626/CG/RW/QV/21897455/product-jpeg-500x500.jpg",
-      category: "ECG Machine",
     },
     {
-      name: "BPL Cardiart 108T DIGI Single Channel ECG Machine",
-      price: "₹22,000/Piece",
-      desc: "Portable single-channel ECG machine offering quick and precise readings.",
-      link: "https://www.indiamart.com/proddetail/bpl-cardiart-108t-digi-single-channel-ecg-machine-23537612991.html",
+      name: "BPL Cardiart 108T DIGI ECG",
+      desc: "Portable single-channel ECG machine for quick diagnostics.",
       img: "https://5.imimg.com/data5/SELLER/Default/2021/6/HD/EA/RJ/21897455/bpl-cardiart-108t-digi-ecg-machine-500x500.jpg",
-      category: "ECG Machine",
     },
     {
       name: "BPL 12 Channel ECG Machine",
-      price: "₹1,10,000/Piece",
       desc: "Advanced 12-channel ECG system with detailed cardiac analysis.",
-      link: "https://www.indiamart.com/proddetail/bpl-12-channel-ecg-machine-2853725492830.html",
       img: "https://5.imimg.com/data5/ANDROID/Default/2024/3/404768261/JW/IR/WM/21897455/product-jpeg-500x500.jpg",
-      category: "ECG Machine",
     },
   ];
 
   const reasons = [
-    { title: "Expert Technical Support", desc: "Dedicated team for installation and maintenance." },
-    { title: "Quality Assurance", desc: "All systems are tested for performance and safety." },
-    { title: "Nationwide Delivery", desc: "Fast and reliable logistics across India." },
-    { title: "After-Sales Support", desc: "We stay with you long after purchase." },
-  ];
-
-  const reviews = [
-    { name: "Alveofit", product: "Contec Spirometer", place: "Indore, Madhya Pradesh" },
-    { name: "Sattu Morey", product: "Fetal Chart Paper", place: "Aurangabad, Maharashtra" },
-    { name: "Narendra Kothari", product: "ECG Paper", place: "Belagavi, Karnataka" },
+    { title: "Expert Technical Support", desc: "Installation, training, and maintenance support." },
+    { title: "Quality-Tested Equipment", desc: "All systems verified before delivery." },
+    { title: "Nationwide Delivery", desc: "Fast logistics across India." },
+    { title: "After-Sales Reliability", desc: "Support even after purchase." },
   ];
 
   const details = [
-    { Icon: FaStore, title: "Nature of Business", text: "Trader - Retailer" },
-    { Icon: FaBalanceScale, title: "Legal Status of Firm", text: "Proprietorship" },
-    { Icon: AiOutlineLineChart, title: "Annual Turnover", text: "0 - 40 L" },
-    { Icon: MdDateRange, title: "GST Registration Date", text: "30-03-2021" },
-    { Icon: FiUsers, title: "Total Number of Employees", text: "Upto 10 People" },
+    { Icon: FaStore, title: "Nature of Business", text: "Trader / Retailer" },
+    { Icon: FaBalanceScale, title: "Legal Status", text: "Proprietorship" },
+    { Icon: AiOutlineLineChart, title: "Annual Turnover", text: "₹0 – ₹40L" },
+    { Icon: MdDateRange, title: "GST Since", text: "30-03-2021" },
+    { Icon: FiUsers, title: "Employees", text: "Up to 10 People" },
     { Icon: RiFilePaper2Line, title: "GST Number", text: "27BYEPS1664K1ZY" },
   ];
 
-  const images = ["/hero.webp", "/logo.webp",];
+  const images = ["/hero.webp", "/logo.webp"];
 
-  // =================== SLIDESHOW ===================
+  /* ---------- HERO SLIDESHOW ---------- */
   const [currentImage, setCurrentImage] = useState(0);
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 4000);
-    return () => clearInterval(interval);
+    const i = setInterval(
+      () => setCurrentImage((p) => (p + 1) % images.length),
+      4000
+    );
+    return () => clearInterval(i);
   }, [images.length]);
 
-  // =================== RETURN ===================
   return (
     <main className="overflow-x-hidden">
 
-      {/* ================= HERO SECTION ================= */}
-      <section className="bg-linear-to-r from-blue-50 to-blue-100 min-h-screen flex flex-col md:flex-row items-center justify-between px-8 md:mt-20 rounded-3xl">
-        {/* Right - Slideshow */}
+      {/* ================= HERO ================= */}
+      <section className="bg-linear-to-r from-blue-50 to-blue-100 min-h-screen flex flex-col-reverse md:flex-row items-center justify-between px-8 md:mt-20 rounded-3xl">
+
+        {/* LEFT – CONTENT */}
         <motion.div
-          initial={{ opacity: 0, x: 50 }}
+          initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mt-10 md:mt-0 p-14"
+          transition={{ duration: 0.7 }}
+          className="max-w-xl"
+        >
+          <p className="text-blue-600 font-semibold mb-2">
+            Trusted Medical Equipment Supplier
+          </p>
+
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4 leading-tight">
+            Reliable Medical Equipment for Clinics & Hospitals
+          </h1>
+
+          <p className="text-gray-600 text-lg mb-6">
+            Certified ECG machines, diagnostic systems, and consumables —
+            delivered across India with dependable after-sales support.
+          </p>
+
+          <div className="flex flex-wrap gap-4">
+            <PrimaryButton text="Browse Products" link="/products" />
+            <PrimaryButton text="Talk to an Expert" link="/contact" variant="secondary" />
+          </div>
+
+          {/* Trust */}
+          <div className="my-4 flex items-center gap-4 bg-white rounded-xl shadow-sm p-4 w-fit">
+            <Image src="/indiamart.webp" alt="IndiaMart" width={40} height={40} />
+            <div>
+              <p className="font-semibold text-gray-800">4.7⭐ on IndiaMart</p>
+              <p className="text-sm text-gray-600">Verified supplier</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* RIGHT – IMAGE */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7 }}
+          className="p-10"
         >
           <Image
             src={images[currentImage]}
-            alt="Health First Medical Systems"
-            loading="eager"
+            alt="Medical Equipment"
+            priority
             width={1000}
             height={500}
-            className="rounded-2xl shadow-lg transition-all duration-700"
+            className="rounded-2xl shadow-lg"
           />
         </motion.div>
-
-        {/* Left */}
-        <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="max-w-xl">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Health First Medical Systems
-          </h1>
-          <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6">
-            This is an official site owned by Shankar Dattatraya Shinde. Here you can find the products of Health First Medical Systems and learn more about us.
-          </p>
-
-          <PrimaryButton text="View Products" link="/products" />
-          <PrimaryButton text="Contact Us" link="/contact" />
-
-          {/* Ratings */}
-          <div className="flex flex-wrap gap-6 mt-10">
-            {platforms.map((p, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.2 }}
-                className="flex items-center gap-3 bg-white rounded-xl shadow-md p-3 cursor-pointer hover:shadow-lg"
-                onClick={() => window.open(p.link, "_blank")}
-              >
-                <Image src={p.logo} alt={p.name} width={40} height={40} />
-                <div>
-                  <p className="font-semibold">{p.name}</p>
-                  <p className="text-sm text-gray-600">{p.rating} ⭐ | {p.reviews}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
       </section>
 
-      {/* ================= ABOUT SECTION ================= */}
-      <section
-        className="flex flex-col justify-center items-center bg-gray-50 py-12 px-6 md:px-16 m-4 rounded-3xl"
-        id="about"
-      >
-        <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8 text-gray-800">About</h2>
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {details.map(({ Icon, title, text }, index) => (
-              <div
-                key={index}
-                className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center text-center hover:shadow-lg transition"
-              >
-                <Icon className="text-blue-600 text-4xl mb-3" />
-                <h3 className="text-lg font-semibold text-gray-700 mb-1">
-                  {title}
-                </h3>
-                <p className="text-sm text-gray-600">{text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="mt-10">
-          <PrimaryButton text="Read more about us" link="/about" />
+      {/* ================= ABOUT ================= */}
+      <section className="bg-gray-50 py-16 px-6 m-4 rounded-3xl text-center">
+        <h2 className="text-3xl font-bold mb-10">About Health First</h2>
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 max-w-6xl mx-auto">
+          {details.map(({ Icon, title, text }, i) => (
+            <div key={i} className="bg-white p-6 rounded-2xl shadow-md">
+              <Icon className="text-blue-600 text-4xl m-auto mb-4" />
+              <h3 className="font-semibold mb-1">{title}</h3>
+              <p className="text-sm text-gray-600">{text}</p>
+            </div>
+          ))}
         </div>
       </section>
-        
 
-      {/* ================= SYSTEMS SECTION ================= */}
-      <section id="systems" className="bg-blue-50 py-20 px-8 m-4 md:px-20 text-center rounded-3xl">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Our Systems</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {systems.map((sys, i) => (
+      {/* ================= SYSTEMS ================= */}
+      <section className="bg-blue-50 py-20 px-8 m-4 rounded-3xl text-center">
+        <h2 className="text-3xl font-bold mb-10">Popular Systems</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {systems.map((s, i) => (
             <motion.div
               key={i}
-              whileHover={{ y: -5, scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 text-left"
+              whileHover={{ y: -5 }}
+              className="bg-white p-6 rounded-2xl shadow-md"
             >
-              <img src={sys.img} alt={sys.name} width={400} height={250} className="rounded-lg mb-4 h-64 w-full object-cover" />
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">{sys.name}</h3>
-              <p className="text-gray-600 text-sm">{sys.desc}</p>
+              <img src={s.img} alt={s.name} className="h-64 w-full object-cover rounded-lg mb-4" />
+              <h3 className="font-semibold text-lg">{s.name}</h3>
+              <p className="text-sm text-gray-600">{s.desc}</p>
             </motion.div>
           ))}
         </div>
         <div className="mt-10">
-          <PrimaryButton text="View More Products" link="/products" />
+          <PrimaryButton text="View Full Product Range" link="/products" />
         </div>
       </section>
 
-      {/* ================= WHY CHOOSE US ================= */}
-      <section className="py-20 m-4 px-8 md:px-20 bg-gray-50 text-center rounded-3xl">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">Why Choose Us</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {/* ================= WHY US ================= */}
+      <section className="py-20 px-8 m-4 bg-gray-50 rounded-3xl text-center">
+        <h2 className="text-3xl font-bold mb-10">Why Choose Us</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {reasons.map((r, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ y: -5, scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-              className="p-6 bg-blue-50 rounded-2xl shadow-md"
-            >
-              <h3 className="font-semibold text-gray-800 mb-2">{r.title}</h3>
-              <p className="text-gray-600 text-sm">{r.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= TESTIMONIALS ================= */}
-      <section className="py-20 m-4 px-8 md:px-20 bg-blue-50 text-center rounded-3xl">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-10">What Our Clients Say</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {reviews.map((r, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ y: -5, scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-              className="p-6 bg-white rounded-2xl shadow-md"
-            >
-              <p className="text-gray-600 italic mb-4">“{r.product}”</p>
-              <h3 className="font-semibold text-gray-800">{r.name}</h3>
-              <p className="text-gray-500 text-sm">{r.place}</p>
-            </motion.div>
+            <div key={i} className="bg-blue-50 p-6 rounded-2xl shadow-md">
+              <h3 className="font-semibold mb-2">{r.title}</h3>
+              <p className="text-sm text-gray-600">{r.desc}</p>
+            </div>
           ))}
         </div>
       </section>
     </main>
   );
 }
-
-
-
-

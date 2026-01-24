@@ -20,17 +20,20 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showSearchBar, setShowSearchBar] = useState(true);
+  const searchInputRef = useRef(null);
 
   const wrapperRef = useRef(null);
 
-  // Fetch data from server
+  // Fetch from API
   useEffect(() => {
-  fetch("/api/products")
-    .then(res => res.json())
-    .then(setProducts)
-    .finally(() => setLoading(false));
-}, []);
-
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then(({ products, categories }) => {
+        setProducts(products);
+        setCategories(categories);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   // Filtered products
   const filteredProducts = products.filter((p) => {
@@ -87,14 +90,23 @@ export default function ProductsPage() {
 
   // ✅ Hide searchbar when scrolling down
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY) setShowSearchBar(false);
-      else setShowSearchBar(true);
-      setLastScrollY(window.scrollY);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  const handleScroll = () => {
+    if (window.scrollY > lastScrollY) {
+      setShowSearchBar(false);
+
+      // 🔑 FORCE keyboard to close
+      searchInputRef.current?.blur();
+    } else {
+      setShowSearchBar(true);
+    }
+
+    setLastScrollY(window.scrollY);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, [lastScrollY]);
+
 
   return (
     <section
@@ -127,7 +139,7 @@ export default function ProductsPage() {
           <motion.div
             initial={{ y: 0 }}
             animate={{ y: showSearchBar ? 0 : -160 }}
-            transition={{ duration: 1, ease: "easeInOut" }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
             className="sticky top-16 z-30 bg-blue-50/90 backdrop-blur border-b border-gray-200 mb-8"
           >
             <div className="max-w-6xl mx-auto px-4 py-4 bg-white/95 rounded-xl shadow-lg">
@@ -140,6 +152,7 @@ export default function ProductsPage() {
 
                 {/* Search input */}
                 <input
+                  ref={searchInputRef}
                   type="text"
                   placeholder="Search by name, model, brand, category…"
                   value={searchQuery}
@@ -325,9 +338,9 @@ export default function ProductsPage() {
                         const message = `Hi, I'm interested in the product "${selectedProduct.Name}". Please share more details.`;
                         window.open(
                           `https://wa.me/9920986401?text=${encodeURIComponent(
-                            message
+                            message,
                           )}`,
-                          "_blank"
+                          "_blank",
                         );
                       }}
                     >

@@ -5,8 +5,9 @@ import ScrollToTop from "./components/ScrollToTop";
 import Script from "next/script";
 import dynamic from "next/dynamic";
 
-const Navbar = dynamic(() => import("./components/Navbar"));
-const Footer = dynamic(() => import("./components/Footer"));
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
 const WhatsAppButton = dynamic(() => import("./components/Whatsapp"));
 
 const geistSans = Geist({
@@ -54,24 +55,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* Google verification */}
         <meta
           name="google-site-verification"
           content="xaiS-ThmQ0IWXZ2cvs5L4yUT9IgMpg9scBCFXVki5MA"
         />
-
-        {/* Preconnects */}
-        <link
-          rel="preconnect"
-          href="https://fonts.googleapis.com"
-          crossOrigin=""
-        />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
-        <link rel="preconnect" href="https://docs.google.com" crossOrigin="" />
       </head>
 
       <body
@@ -84,7 +71,7 @@ export default function RootLayout({ children }) {
         <ScrollToTop />
         <Footer />
 
-        {/* --- Organization Schema --- */}
+        {/* Organization Schema */}
         <Script
           id="organization-schema"
           type="application/ld+json"
@@ -96,9 +83,6 @@ export default function RootLayout({ children }) {
               name: "Health First Medical Systems",
               url: "https://healthfirstmedicalsystems.vercel.app",
               logo: "https://healthfirstmedicalsystems.vercel.app/logo.webp",
-              sameAs: [
-                
-              ],
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "08046074634",
@@ -110,7 +94,7 @@ export default function RootLayout({ children }) {
           }}
         />
 
-        {/* --- LocalBusiness Schema --- */}
+        {/* LocalBusiness Schema */}
         <Script
           id="localbusiness-schema"
           type="application/ld+json"
@@ -120,59 +104,29 @@ export default function RootLayout({ children }) {
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               name: "Health First Medical Systems",
-              image: "https://healthfirstmedicalsystems.vercel.app/logo.png",
-              "@id": "https://healthfirstmedicalsystems.vercel.app",
               url: "https://healthfirstmedicalsystems.vercel.app",
-              telephone: "+91-XXXXXXXXXX",
-              priceRange: "₹₹",
               address: {
                 "@type": "PostalAddress",
-                streetAddress: "Your Address Line Here",
                 addressLocality: "Nanded",
                 addressRegion: "Maharashtra",
-                postalCode: "431601",
                 addressCountry: "IN",
               },
-              geo: {
-                "@type": "GeoCoordinates",
-                latitude: 19.1383,
-                longitude: 77.321,
-              },
-              openingHoursSpecification: [
-                {
-                  "@type": "OpeningHoursSpecification",
-                  dayOfWeek: [
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                  ],
-                  opens: "09:00",
-                  closes: "18:00",
-                },
-              ],
-              sameAs: [
-                "https://www.facebook.com/yourpage",
-                "https://www.instagram.com/yourpage",
-              ],
             }),
           }}
         />
 
-        {/* --- Google Analytics --- */}
+        {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-LDHZJGMTRJ"
           strategy="afterInteractive"
         />
         <Script id="gtag" strategy="afterInteractive">
           {`
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-LDHZJGMTRJ', { page_path: window.location.pathname });
-  `}
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-LDHZJGMTRJ', { page_path: window.location.pathname });
+          `}
         </Script>
       </body>
     </html>
