@@ -90,23 +90,22 @@ export default function ProductsPage() {
 
   // ✅ Hide searchbar when scrolling down
   useEffect(() => {
-  const handleScroll = () => {
-    if (window.scrollY > lastScrollY) {
-      setShowSearchBar(false);
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY) {
+        setShowSearchBar(false);
 
-      // 🔑 FORCE keyboard to close
-      searchInputRef.current?.blur();
-    } else {
-      setShowSearchBar(true);
-    }
+        // 🔑 FORCE keyboard to close
+        searchInputRef.current?.blur();
+      } else {
+        setShowSearchBar(true);
+      }
 
-    setLastScrollY(window.scrollY);
-  };
+      setLastScrollY(window.scrollY);
+    };
 
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, [lastScrollY]);
-
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
     <section
@@ -157,7 +156,7 @@ export default function ProductsPage() {
                   placeholder="Search by name, model, brand, category…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-12 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-12 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
 
                 {/* Filter icon */}
@@ -179,7 +178,7 @@ export default function ProductsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.18 }}
-                    className="absolute z-20 mt-2 w-full bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto"
+                    className="absolute z-20 mt-2 inset-x-0 bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto"
                     ref={wrapperRef}
                   >
                     {categories.map((cat) => (

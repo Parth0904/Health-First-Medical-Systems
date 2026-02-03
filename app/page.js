@@ -87,14 +87,14 @@ export default function HomePage() {
     <main className="overflow-x-hidden">
 
       {/* ================= HERO ================= */}
-      <section className="bg-linear-to-r from-blue-50 to-blue-100 min-h-screen flex flex-col-reverse md:flex-row items-center justify-between px-8 md:mt-20 rounded-3xl">
+      <section className="m-4 bg-linear-to-r from-blue-50 to-blue-100 min-h-screen flex flex-col-reverse md:flex-row items-center justify-between px-8 md:mt-20 rounded-3xl">
 
         {/* LEFT – CONTENT */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7 }}
-          className="max-w-xl"
+          className="max-w-xl m-4"
         >
           <p className="text-blue-600 font-semibold mb-2">
             Trusted Medical Equipment Supplier
@@ -135,8 +135,8 @@ export default function HomePage() {
             src={images[currentImage]}
             alt="Medical Equipment"
             priority
-            width={1000}
-            height={500}
+            width={600}
+            height={300}
             className="rounded-2xl shadow-lg"
           />
         </motion.div>
