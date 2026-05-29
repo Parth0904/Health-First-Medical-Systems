@@ -194,7 +194,7 @@ export default function ContactSection() {
           className="
             rounded-4xl
 
-            bg-lineat-to-r
+            bg-linear-to-r
             from-blue-600
             to-cyan-500
 
