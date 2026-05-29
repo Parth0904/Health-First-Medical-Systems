@@ -1,167 +1,272 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import CheckIcon from "../components/CheckIcon";
+import PageHero from "../components/Pagehero";
 
 export default function AboutSection() {
   return (
-    <div className="bg-linear-to-r from-blue-50 to-white">
+    <div className="bg-linear-to-r from-blue-50 to-white min-h-screen font-sans">
 
-      {/* ================= ABOUT INTRO ================= */}
-      <section
-        id="about-intro"
-        className="bg-white py-20 px-8 md:px-20 flex flex-col md:flex-row items-center gap-12"
-      >
-        {/* Image */}
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="w-full md:w-1/2"
-        >
-          <Image
-            src="/hero.webp"
-            alt="Health First Medical Systems"
-            width={500}
-            height={500}
-            className="rounded-2xl shadow-lg"
-            priority
-          />
-        </motion.div>
-
-        {/* Content */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="w-full md:w-1/2"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-            About Health First Medical Systems
-          </h2>
-
-          <p className="text-gray-600 text-lg mb-6 leading-relaxed">
-            <strong>Health First Medical Systems</strong> is a Maharashtra-based
-            medical equipment supplier serving clinics, hospitals, and healthcare
-            organizations across India. We specialize in supplying reliable
-            diagnostic systems and medical devices with dependable after-sales
-            support.
-          </p>
-
-          <ul className="space-y-3 text-gray-700">
-            <li className="flex gap-2">
-              <CheckIcon /> Certified and quality-tested medical equipment
-            </li>
-            <li className="flex gap-2">
-              <CheckIcon /> Trusted by hospitals, clinics, and institutions
-            </li>
-            <li className="flex gap-2">
-              <CheckIcon /> Focused on long-term service and reliability
-            </li>
-          </ul>
-        </motion.div>
-      </section>
-
-      {/* ================= FACTSHEET ================= */}
-      <section
-        id="about-facts"
-        className="py-16 px-8 md:px-20 flex justify-center"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="w-full max-w-4xl"
-        >
-          {/* Header */}
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <h2 className="text-3xl font-bold text-gray-800">
-              Company Factsheet
-            </h2>
-            <Image
-              src="/trustseal.webp"
-              alt="IndiaMART Trust Seal"
-              width={48}
-              height={48}
-              className="cursor-pointer"
-              onClick={() =>
-                window.open(
-                  "https://trustseal.indiamart.com/members/health-first-medicalsystems",
-                  "_blank"
-                )
-              }
-            />
-          </div>
-
-          {/* Facts */}
-          <div className="bg-white rounded-2xl shadow-md p-8 space-y-8 text-gray-700">
-
-            {/* Basic Info */}
-            <div>
-              <h3 className="text-xl font-semibold mb-4">
-                Basic Information
+      {/* ================= HERO INTRO SECTION ================= */}
+      <section id="about-intro" className="py-24 px-6 md:px-16 lg:px-24 max-w-7xl mx-auto">
+       <PageHero
+  badge="About Health First"
+  title="Building Better Healthcare Infrastructure Across India"
+  description="Health First Medical Systems supplies trusted diagnostic equipment and medical systems to clinics, hospitals and healthcare providers with a focus on reliability, support and long-term partnerships."
+/>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+          
+          {/* Left Column: Replaced Image with an Enterprise Metrics Board */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="lg:col-span-5 lg:sticky lg:top-12 space-y-6"
+          >
+            <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100/80 relative overflow-hidden">
+              {/* Decorative Subtle Background Glow */}
+              <div className="absolute -right-10 -top-10 w-40 h-40 bg-blue-400/10 rounded-full blur-2xl"></div>
+              
+              <h3 className="text-sm font-bold text-blue-600 uppercase tracking-wider mb-6 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span> Operational Overview
               </h3>
-              <ul className="space-y-2">
-                <li><strong>Nature of Business:</strong> Trader / Retailer</li>
-                <li><strong>Legal Status:</strong> Proprietorship</li>
-                <li><strong>Company Head:</strong> Shankar Dattatraya Shinde</li>
-                <li><strong>Employees:</strong> Up to 10 people</li>
-                <li><strong>GST Registered Since:</strong> 30-03-2021</li>
-                <li><strong>Annual Turnover:</strong> ₹0 – ₹40 Lakhs</li>
-              </ul>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+                
+                {/* Metric 1 */}
+                <div className="border-b border-gray-100 pb-4">
+                  <div className="text-3xl font-extrabold text-gray-900">2020</div>
+                  <div className="text-sm font-medium text-gray-500 mt-1">Incorporation Year</div>
+                </div>
+
+                {/* Metric 2 */}
+                <div className="border-b border-gray-100 pb-4">
+                  <div className="text-3xl font-extrabold text-blue-600">Pan-India</div>
+                  <div className="text-sm font-medium text-gray-500 mt-1">Supply & Distribution Network</div>
+                </div>
+
+                {/* Metric 3 */}
+                <div className="border-b border-gray-100 pb-4 lg:border-none lg:pb-0">
+                  <div className="text-3xl font-extrabold text-gray-900">Tier-1 & 2</div>
+                  <div className="text-sm font-medium text-gray-500 mt-1">Clinical Support Coverage</div>
+                </div>
+
+                {/* Metric 4 */}
+                <div className="lg:hidden sm:border-none sm:pb-0 pb-4">
+                  <div className="text-3xl font-extrabold text-gray-900">₹0 – ₹1 Cr</div>
+                  <div className="text-sm font-medium text-gray-500 mt-1">Annual Volume Traded</div>
+                </div>
+
+              </div>
             </div>
 
-            {/* Address */}
-            <div>
-              <h3 className="text-xl font-semibold mb-4">
-                Registered Address
-              </h3>
-              <p>
-                A304, Madhuban Society, Railway Power House Road,  
-                Mataji Mandir Road, Titwala,  
-                Kalyan – 421605, Maharashtra, India
+            {/* Micro Callout for Instant Validation */}
+            <div className="p-5 bg-linear-to-r from-blue-600 to-cyan-600 rounded-2xl text-white shadow-md">
+              <p className="text-xs font-semibold opacity-90 uppercase tracking-wider mb-1">Corporate Mandate</p>
+              <p className="text-sm font-medium leading-relaxed">
+                Advancing clinical outcomes across India through genuine ideas and technical engineering precision.
               </p>
             </div>
+          </motion.div>
 
-            {/* Statutory */}
-            <div>
-              <h3 className="text-xl font-semibold mb-4">
-                Statutory Profile
-              </h3>
-              <ul className="space-y-2">
-                <li><strong>GST Number:</strong> 27BYEPS1664K1ZY</li>
-                <li><strong>Banker:</strong> State Bank of India</li>
-              </ul>
+          {/* Right Column: Narrative & Architecture */}
+          <div className="lg:col-span-7 space-y-12">
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="space-y-6"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-semibold tracking-wide uppercase">
+                Corporate Profile
+              </div>
+              <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                Strengthening Healthcare Providers
+              </h2>
+              <p className="text-gray-600 text-xl font-medium leading-relaxed">
+                We bring genuine and innovative ideas to the table, helping solidify and strengthen 
+                the capacity of modern healthcare providers.
+              </p>
+              <div className="h-px bg-linear-to-r from-blue-200 to-transparent w-2/3"></div>
+              <p className="text-gray-600 text-lg leading-relaxed">
+                By pairing highly certified medical devices with our forward-thinking support model, 
+                we ensure doctors and medical staff can focus entirely on saving lives. Backed by an 
+                increasingly strong infrastructure and an expanding sales and service footprint, we are 
+                scaling our reach strategically to ensure no medical institution is left without top-tier 
+                technical support.
+              </p>
+            </motion.div>
+
+            {/* Strategic Value Blocks */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              {/* Pillar 1 */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="p-6 bg-white rounded-2xl border border-gray-100 shadow-xs hover:shadow-md transition duration-300 space-y-4"
+              >
+                <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 21l8.954-8.955M21 12h0l-9 9m9-9a9 9 0 10-9 9m9-9H3.75" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">AI-Assisted Patient Care</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  The medical landscape shifts quickly. We are continuously working on the inception of top-tier 
+                  service delivery in a highly competitive market by adopting the latest technology trends, 
+                  including, AI-assisted patient care systems.
+                </p>
+              </motion.div>
+
+              {/* Pillar 2 */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                viewport={{ once: true }}
+                className="p-6 bg-white rounded-2xl border border-gray-100 shadow-xs hover:shadow-md transition duration-300 space-y-4"
+              >
+                <div className="w-12 h-12 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Nationwide Expansion Goal</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  By maintaining standard operational controls and deploying reactive service assets locally, 
+                  our network is proactively built to eliminate down-times for crucial tier-1 and tier-2 clinical frameworks.
+                </p>
+              </motion.div>
+
             </div>
-
-            {/* Payment & Shipping */}
-            <div>
-              <h3 className="text-xl font-semibold mb-4">
-                Payment & Shipment
-              </h3>
-              <ul className="space-y-2">
-                <li><strong>Payment Modes:</strong> Cash, Cheque, DD, Online</li>
-                <li><strong>Shipment Mode:</strong> Road transport</li>
-              </ul>
-            </div>
-
-            {/* Clients */}
-            <div>
-              <h3 className="text-xl font-semibold mb-4">
-                Major Clients
-              </h3>
-              <ul className="list-disc pl-6 space-y-1">
-                <li>Larsen & Toubro Ltd</li>
-                <li>Taj Hotel</li>
-                <li>Jaslok Hospital</li>
-              </ul>
-            </div>
-
           </div>
-        </motion.div>
+        </div>
+      </section>
+
+      {/* ================= EXECUTIVE DATA FACTSHEET ================= */}
+      <section id="about-facts" className="py-24 px-6 md:px-16 lg:px-24 bg-gray-50/50 border-t border-b border-gray-100">
+        <div className="max-w-5xl mx-auto space-y-12">
+          
+          {/* Header Dynamic Block */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 border-b border-gray-200 pb-8">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+                Company Factsheet
+              </h2>
+              <p className="text-gray-500 text-sm">Verified statutory operations and industry compliance metrics.</p>
+            </div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-3 bg-white px-5 py-3 rounded-xl shadow-xs border border-gray-200 cursor-pointer"
+              onClick={() => window.open("https://trustseal.indiamart.com/members/health-first-medicalsystems", "_blank")}
+            >
+              <Image src="/trustseal.webp" alt="IndiaMART Trust Seal" width={32} height={32} />
+              <div className="text-left">
+                <div className="text-xs text-gray-400 font-medium uppercase tracking-wider">Verified Profile</div>
+                <div className="text-sm font-bold text-gray-800">IndiaMART Trust Seal</div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Structured Data Content */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            
+            {/* Column 1: Registry Operations */}
+            <div className="bg-white rounded-2xl border border-gray-200/60 p-8 shadow-xs space-y-6">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                  <span className="w-1.5 h-4 bg-blue-600 rounded-xs"></span> Basic & Statutory Registry
+                </h3>
+                <dl className="space-y-3 text-sm">
+                  <div className="flex justify-between py-1.5 border-b border-gray-50">
+                    <dt className="text-gray-500 font-medium">Nature of Business</dt>
+                    <dd className="text-gray-900 font-semibold">Trader / Retailer</dd>
+                  </div>
+                  <div className="flex justify-between py-1.5 border-b border-gray-50">
+                    <dt className="text-gray-500 font-medium">Legal Status</dt>
+                    <dd className="text-gray-900 font-semibold">Proprietorship</dd>
+                  </div>
+                  <div className="flex justify-between py-1.5 border-b border-gray-50">
+                    <dt className="text-gray-500 font-medium">Company Head</dt>
+                    <dd className="text-gray-900 font-semibold">Shankar Dattatraya Shinde</dd>
+                  </div>
+                  <div className="flex justify-between py-1.5 border-b border-gray-50">
+                    <dt className="text-gray-500 font-medium">GST Registered Since</dt>
+                    <dd className="text-gray-900 font-semibold">30-03-2021</dd>
+                  </div>
+                  <div className="flex justify-between py-1.5 border-b border-gray-50">
+                    <dt className="text-gray-500 font-medium">GSTIN Token</dt>
+                    <dd className="text-gray-900 font-mono font-bold text-blue-600">27BYEPS1664K1ZY</dd>
+                  </div>
+                  <div className="flex justify-between pt-1.5">
+                    <dt className="text-gray-500 font-medium">Banking Partner</dt>
+                    <dd className="text-gray-900 font-semibold">State Bank of India</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <span className="w-1.5 h-4 bg-blue-600 rounded-xs"></span> Registered Location
+                </h3>
+                <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-100 leading-relaxed font-medium">
+                  Shop No 7, E11 Building, Madhuban Co-operative Society, Titwala, Kalyan, Thane, Maharashtra - 421605
+                </p>
+              </div>
+            </div>
+
+            {/* Column 2: Logistics & Major Enterprise Alliances */}
+            <div className="space-y-8">
+              
+              {/* Commerce Infrastructure block */}
+              <div className="bg-white rounded-2xl border border-gray-200/60 p-8 shadow-xs">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                  <span className="w-1.5 h-4 bg-cyan-500 rounded-xs"></span> Logistics & Operations
+                </h3>
+                <dl className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="bg-gray-50/60 p-4 rounded-xl border border-gray-100">
+                    <dt className="text-gray-400 font-medium text-xs uppercase tracking-wider mb-1">Human Capital</dt>
+                    <dd className="text-gray-900 font-bold text-base">Up to 10 People</dd>
+                  </div>
+                  <div className="bg-gray-50/60 p-4 rounded-xl border border-gray-100">
+                    <dt className="text-gray-400 font-medium text-xs uppercase tracking-wider mb-1">Annual Turnover</dt>
+                    <dd className="text-gray-900 font-bold text-base">₹0 – ₹1 Cr</dd>
+                  </div>
+                  <div className="bg-gray-50/60 p-4 rounded-xl border border-gray-100">
+                    <dt className="text-gray-400 font-medium text-xs uppercase tracking-wider mb-1">Settlement</dt>
+                    <dd className="text-gray-900 font-semibold text-xs leading-tight mt-1">Cash, Cheque, DD, Online Transfer</dd>
+                  </div>
+                  <div className="bg-gray-50/60 p-4 rounded-xl border border-gray-100">
+                    <dt className="text-gray-400 font-medium text-xs uppercase tracking-wider mb-1">Logistics Mode</dt>
+                    <dd className="text-gray-900 font-semibold text-sm mt-1">Road Transport Network</dd>
+                  </div>
+                </dl>
+              </div>
+
+              {/* Major Portfolio Clients */}
+              <div className="bg-white rounded-2xl border border-gray-200/60 p-8 shadow-xs">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span className="w-1.5 h-4 bg-cyan-500 rounded-xs"></span> Major Clients
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {["Larsen & Toubro Ltd", "Taj Hotel Group", "Jaslok Hospital"].map((client, idx) => (
+                    <div key={idx} className="flex items-center justify-center text-center p-3 rounded-xl bg-gray-50 border border-gray-100 text-sm font-bold text-gray-700">
+                      {client}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

@@ -1,142 +1,260 @@
 "use client";
-import { motion } from "framer-motion";
-import { useState } from "react";
+
+import Link from "next/link";
+import PageHero from "../components/Pagehero";
 
 export default function ContactSection() {
-  const [status, setStatus] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus("");
-    setLoading(true);
-
-    const formData = new FormData(e.target);
-    const form = Object.fromEntries(formData);
-
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setStatus("✅ Message sent successfully!");
-        e.target.reset();
-      } else {
-        setStatus(`❌ ${data.error}`);
-      }
-    } catch (err) {
-      setStatus("⚠️ Something went wrong. Try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <section className="text-gray-600 body-font relative">
-      <div className="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap">
-        <div className="lg:w-2/3 md:w-1/2 bg-gray-300 rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative">
+    <section className="bg-[#f5f9ff] min-h-screen">
+      <PageHero
+        badge="Contact Us"
+        title="We're Here To Help"
+        description="Get in touch with our team for product information, quotations, support or business enquiries."
+      />
+
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 pb-20">
+
+        {/* CONTACT CARDS */}
+
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+
+          <a
+            href="tel:+919920986401"
+            className="
+              bg-white
+              rounded-3xl
+              border border-blue-100
+              p-6
+
+              shadow-sm
+              hover:shadow-md
+
+              transition-all duration-300
+            "
+          >
+            <h3 className="font-bold text-gray-900">
+              Call Us
+            </h3>
+
+            <p className="mt-3 text-blue-600 font-medium">
+              +91 99209 86401
+            </p>
+          </a>
+
+          <a
+            href="mailto:info@healthfirst.com"
+            className="
+              bg-white
+              rounded-3xl
+              border border-blue-100
+              p-6
+
+              shadow-sm
+              hover:shadow-md
+
+              transition-all duration-300
+            "
+          >
+            <h3 className="font-bold text-gray-900">
+              Email
+            </h3>
+
+            <p className="mt-3 text-blue-600 font-medium break-all">
+              sales@healthfirstmed.in
+            </p>
+          </a>
+
+          <a
+            href="https://wa.me/919920986401"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              bg-white
+              rounded-3xl
+              border border-blue-100
+              p-6
+
+              shadow-sm
+              hover:shadow-md
+
+              transition-all duration-300
+            "
+          >
+            <h3 className="font-bold text-gray-900">
+              WhatsApp
+            </h3>
+
+            <p className="mt-3 text-green-600 font-medium">
+              Start Conversation
+            </p>
+          </a>
+
+        </div>
+
+        {/* MAP */}
+
+        <div
+          className="
+            overflow-hidden
+
+            rounded-4xl
+
+            border border-blue-100
+
+            bg-white
+
+            shadow-sm
+
+            mb-10
+          "
+        >
           <iframe
+            title="Health First Medical Systems Location"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3765.7810483520675!2d73.19947017498309!3d19.291885531957632!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7912b328eb897%3A0xfc39a7b2e20a8685!2sMadhuban%20Complex%2C!5e0!3m2!1sen!2sin!4v1780041236629!5m2!1sen!2sin"
             width="100%"
-            height="100%"
-            className="absolute inset-0"
-            title="map"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3765.6735251794403!2d73.20208067419!3d19.296558645013434!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be79121c8ad43f1%3A0x2cbee773c3c2bf55!2sHealth%20First%20Medical%20Systems!5e0!3m2!1sen!2sin!4v1768541184251!5m2!1sen!2sin"
-            style={{
-              border: 0,
-              filter: "contrast(1.2) opacity(0.4)",
-              overflow: "hidden",
-            }}
+            height="450"
+            style={{ border: 0 }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
-
-          <div className="bg-white relative flex flex-wrap py-6 rounded shadow-md">
-            <div className="lg:w-1/2 px-6">
-              <h2 className="title-font font-semibold text-gray-900 tracking-widest text-xs">
-                ADDRESS
-              </h2>
-              <p className="mt-1">
-                📍 Health First Medical Systems A304, Madhuban Society, Railway
-                Power House Road Mataji Mandir Road, Titwala, Kalyan,
-                Thane-421605, Maharashtra, India
-              </p>
-            </div>
-            <div className="lg:w-1/2 px-6 mt-4 lg:mt-0">
-              <h2 className="title-font font-semibold text-gray-900 tracking-widest text-xs">
-                Proprietor
-              </h2>
-              <a className="text-blue-500 leading-relaxed">
-                👨‍💻 Shankar Dattatraya Shinde
-              </a>
-              <h2 className="title-font font-semibold text-gray-900 tracking-widest text-xs mt-4">
-                PHONE
-              </h2>
-              <p className="leading-relaxed">📞 08046074634</p>
-            </div>
-          </div>
+          />
         </div>
-        <div className="lg:w-1/3 md:w-1/2 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
-          <h2 className="text-gray-900 text-lg mb-1 font-medium title-font">
-            Get In Touch
-          </h2>
-          <p className="leading-relaxed mb-5 text-gray-600">
-            Have questions or need more information about our medical systems?
-            Fill out the form, and our team will get back to you promptly.
-          </p>
-          <div className="relative mb-4">
-            <label htmlFor="name" className="leading-7 text-sm text-gray-600">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-            />
-          </div>
-          <div className="relative mb-4">
-            <label htmlFor="email" className="leading-7 text-sm text-gray-600">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-            />
-          </div>
-          <div className="relative mb-4">
-            <label htmlFor="message" className="leading-7 text-sm text-gray-600">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              className="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
-            ></textarea>
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className={`${
-              loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
-            } text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 w-full`}
+
+        {/* BUSINESS INFO */}
+
+        <div className="grid md:grid-cols-3 gap-6 mb-14">
+
+          <div
+            className="
+              bg-white
+              rounded-3xl
+              border border-blue-100
+
+              p-6
+            "
           >
-            {loading ? "Sending..." : "Send Message"}
-          </button>
+            <h3 className="font-semibold text-gray-900 mb-3">
+              Address
+            </h3>
 
-          {status && (
-            <p className="text-center text-sm mt-4 font-medium">{status}</p>
-          )}
-          <p className="text-xs text-gray-500 mt-3">
-            Thank you for contacting with us we will reach out to you soon ...
-          </p>
+            <p className="text-gray-600 leading-relaxed">
+              Shop No. 7,
+              E11 Building,
+              Madhuban Co-operative Society,
+              Titwala East,
+              Thane,
+              Maharashtra 421605
+            </p>
+          </div>
+
+          <div
+            className="
+              bg-white
+              rounded-3xl
+              border border-blue-100
+
+              p-6
+            "
+          >
+            <h3 className="font-semibold text-gray-900 mb-3">
+              Proprietor
+            </h3>
+
+            <p className="text-gray-600">
+              Shankar Dattatraya Shinde
+            </p>
+          </div>
+
+          <div
+            className="
+              bg-white
+              rounded-3xl
+              border border-blue-100
+
+              p-6
+            "
+          >
+            <h3 className="font-semibold text-gray-900 mb-3">
+              Business Contact
+            </h3>
+
+            <p className="text-gray-600">
+              +91 99209 86401
+            </p>
+
+            <p className="text-gray-600 mt-2">
+              info@healthfirst.com
+            </p>
+          </div>
+
         </div>
+
+        {/* CTA */}
+
+        <div
+          className="
+            rounded-4xl
+
+            bg-lineat-to-r
+            from-blue-600
+            to-cyan-500
+
+            text-white
+
+            text-center
+
+            p-10 md:p-14
+          "
+        >
+          <h2
+            className="
+              text-3xl
+              md:text-4xl
+
+              font-bold
+            "
+          >
+            Need Help Choosing the Right Equipment?
+          </h2>
+
+          <p
+            className="
+              mt-4
+
+              max-w-2xl
+              mx-auto
+
+              text-blue-100
+            "
+          >
+            Skip traditional forms. Use our guided inquiry system
+            and we'll help you find the right medical solution.
+          </p>
+
+          <div className="mt-8">
+            <Link
+              href="/inquiry"
+              className="
+                inline-flex items-center
+
+                px-8 py-4
+
+                rounded-2xl
+
+                bg-white
+
+                text-blue-600
+                font-semibold
+
+                hover:shadow-xl
+
+                transition-all duration-300
+              "
+            >
+              Go To Inquiry
+            </Link>
+          </div>
+        </div>
+
       </div>
     </section>
   );

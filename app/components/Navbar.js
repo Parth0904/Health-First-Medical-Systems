@@ -2,26 +2,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion,AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
-  const [showNavbar, setShowNavbar] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const pathname = usePathname();
   const menuRef = useRef();
-
-  // ✅ Hide navbar when scrolling down
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY) setShowNavbar(false);
-      else setShowNavbar(true);
-      setLastScrollY(window.scrollY);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
 
   // ✅ Scroll progress bar logic
   useEffect(() => {
@@ -61,9 +48,18 @@ export default function Navbar() {
   return (
     <motion.nav
       initial={{ y: 0 }}
-      animate={{ y: showNavbar ? 0 : -80 }}
-      transition={{ duration: 0.25, ease: "easeInOut" }}
-      className="bg-white text-gray-800 fixed w-full z-50 shadow-md border-b border-gray-100 top-0"
+      className="
+  bg-white/95
+  backdrop-blur-xl
+
+  text-gray-800
+
+  fixed w-full z-50 top-0
+
+  border-b border-blue-100/50
+
+  shadow-[0_4px_30px_rgba(37,99,235,0.05)]
+"
     >
       {/* ✅ Scroll progress bar */}
       <div
@@ -76,32 +72,76 @@ export default function Navbar() {
           {/* Logo */}
           <div className="shrink-0">
             <Link href="/" className="text-2xl font-extrabold text-blue-700">
-              Health<span className="text-blue-500">First</span>
+              Health<span className="text-cyan-500">First</span>
             </Link>
           </div>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex space-x-8 text-base font-medium">
-            {links.map((link, index) => (
-              <Link
-                key={index}
-                href={link.href}
-                className={`relative transition-colors duration-300 hover:text-blue-600 ${
-                  pathname === link.href
-                    ? "text-blue-600 after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-blue-600"
-                    : ""
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
+         {/* Desktop Links */}
+<div className="hidden md:flex items-center gap-3">
+
+  {/* NAV LINKS */}
+  <div className="
+    flex items-center gap-1
+    bg-slate-50 border border-slate-200
+    rounded-full px-2 py-2
+  ">
+    {links.map((link, index) => (
+      <Link
+        key={index}
+        href={link.href}
+        className={`
+          relative px-4 py-2 rounded-full
+          text-sm font-medium
+          transition-all duration-300
+          ${
+            pathname === link.href
+              ? "bg-blue-50 text-blue-700 border border-blue-100"
+              : "text-gray-600 hover:text-gray-900 hover:bg-white/70"
+          }
+        `}
+      >
+        {link.name}
+      </Link>
+    ))}
+  </div>
+
+  {/* SPECIAL INQUIRY BUTTON */}
+  <Link
+    href="/inquiry"
+    className="
+      group relative overflow-hidden
+      px-5 py-3 rounded-full
+      bg-linear-to-r from-blue-600 to-cyan-500
+      text-white font-semibold text-sm
+      shadow-lg shadow-blue-500/20
+      hover:scale-[1.03]
+      transition-all duration-300
+    "
+  >
+    <span className="relative z-10 flex items-center gap-2">
+       Inquiry
+    </span>
+
+    <div className="
+      absolute inset-0
+      bg-white/10
+      opacity-0 group-hover:opacity-100
+      transition-opacity duration-300
+    " />
+  </Link>
+</div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
-            <button
-              onClick={toggleMenu}
-              className="text-gray-700 focus:outline-none"
+           <button
+  onClick={toggleMenu}
+  className="
+    relative w-11 h-11
+    rounded-2xl
+    bg-gray-100 hover:bg-gray-200
+    flex items-center justify-center
+    transition-all duration-300
+  "
               aria-label={isOpen ? "Close menu" : "Open menu"}
               title={isOpen ? "Close menu" : "Open menu"}
             >
@@ -139,29 +179,91 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ✅ Mobile Links (inside same ref now) */}
-      {isOpen && (
-        <motion.div
-          ref={menuRef}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
-          className="md:hidden bg-blue-50 border-t border-blue-100"
-        >
-          {links.map((link, index) => (
+     {/* MOBILE MENU */}
+<AnimatePresence>
+  {isOpen && (
+    <>
+      {/* BACKDROP */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setIsOpen(false)}
+        className="
+          md:hidden fixed inset-0
+          bg-slate-900/40 backdrop-blur-sm
+          z-40
+        "
+      />
+
+      {/* MENU PANEL */}
+      <motion.div
+        ref={menuRef}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.25 }}
+        className="
+          md:hidden fixed top-[72px] left-4 right-4
+          z-50
+        "
+      >
+
+        <div className="
+          overflow-hidden rounded-3xl
+          border border-white/40
+          bg-white/90 backdrop-blur-2xl
+          shadow-2xl
+          p-4
+        ">
+
+          {/* LINKS */}
+          <div className="space-y-2">
+
+            {links.map((link, index) => (
+              <Link
+                key={index}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`
+                  flex items-center justify-between
+                  px-4 py-4 rounded-2xl
+                  text-sm font-medium
+                  transition-all duration-300
+                  ${
+                    pathname === link.href
+                      ? "bg-blue-50 text-blue-700"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }
+                `}
+              >
+                <span>{link.name}</span>
+
+                <span className="text-gray-400">→</span>
+              </Link>
+            ))}
+
+            {/* INQUIRY BUTTON */}
             <Link
-              key={index}
-              href={link.href}
-              className={`block px-6 py-3 text-gray-800 font-medium transition-colors duration-200 hover:bg-blue-100 ${
-                pathname === link.href ? "bg-blue-600 text-white" : ""
-              }`}
+              href="/inquiry"
               onClick={() => setIsOpen(false)}
+              className="
+                mt-4 flex items-center justify-center
+                gap-2
+                py-4 px-5 rounded-2xl
+                bg-linear-to-r from-blue-600 to-cyan-500
+                text-white font-semibold
+                shadow-lg
+              "
             >
-              {link.name}
+               Send Inquiry
             </Link>
-          ))}
-        </motion.div>
-      )}
+          </div>
+        </div>
+      </motion.div>
+    </>
+  )}
+</AnimatePresence>
     </motion.nav>
   );
 }

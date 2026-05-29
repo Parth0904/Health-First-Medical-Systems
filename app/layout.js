@@ -1,10 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import TopLoader from "./components/TopLoader";
 import ScrollToTop from "./components/ScrollToTop";
 import Script from "next/script";
 import dynamic from "next/dynamic";
-
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -23,20 +21,36 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Health First Medical Systems",
+  metadataBase: new URL("https://healthfirstmed.in"),
+
+  title: {
+    default: "Health First Medical Systems",
+    template: "%s | Health First Medical Systems",
+  },
   description:
-    "Health First Medical Systems provides reliable medical equipment and healthcare technology solutions across India.",
-  keywords:
-    "medical systems, healthcare, medical equipment, hospital supplies, Health First Medical Systems",
+    "Supplier of ECG machines, diagnostic systems and medical equipment for clinics, hospitals and healthcare providers across India.",
+  keywords: [
+    "ECG Machine",
+    "Medical Equipment",
+    "Diagnostic Equipment",
+    "Hospital Equipment",
+    "Medical Systems",
+    "Healthcare Equipment",
+    "ECG Supplier India",
+    "Medical Equipment Supplier",
+  ],
+  alternates: {
+  canonical: "https://healthfirstmed.in",
+},
   openGraph: {
     title: "Health First Medical Systems",
     description:
       "Reliable medical equipment and healthcare technology solutions for hospitals, clinics, and labs.",
-    url: "https://healthfirstmedicalsystems.vercel.app",
+    url: "https://healthfirstmed.in",
     siteName: "Health First Medical Systems",
     images: [
       {
-        url: "https://healthfirstmedicalsystems.vercel.app/og-image.jpg",
+        url: "https://healthfirstmed.in/og-image.webp",
         width: 1200,
         height: 630,
         alt: "Health First Medical Systems",
@@ -66,33 +80,9 @@ export default function RootLayout({ children }) {
       >
         <WhatsAppButton />
         <Navbar />
-        <TopLoader />
         {children}
         <ScrollToTop />
         <Footer />
-
-        {/* Organization Schema */}
-        <Script
-          id="organization-schema"
-          type="application/ld+json"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "Health First Medical Systems",
-              url: "https://healthfirstmedicalsystems.vercel.app",
-              logo: "https://healthfirstmedicalsystems.vercel.app/logo.webp",
-              contactPoint: {
-                "@type": "ContactPoint",
-                telephone: "08046074634",
-                contactType: "Customer Service",
-                areaServed: "IN",
-                availableLanguage: "English",
-              },
-            }),
-          }}
-        />
 
         {/* LocalBusiness Schema */}
         <Script
@@ -104,11 +94,14 @@ export default function RootLayout({ children }) {
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               name: "Health First Medical Systems",
-              url: "https://healthfirstmedicalsystems.vercel.app",
+              url: "https://healthfirstmed.in",
               address: {
                 "@type": "PostalAddress",
-                addressLocality: "Nanded",
+                streetAddress:
+                  "Shop No 7, E11 Building, Madhuban Co-operative Society",
+                addressLocality: "Titwala",
                 addressRegion: "Maharashtra",
+                postalCode: "421605",
                 addressCountry: "IN",
               },
             }),
