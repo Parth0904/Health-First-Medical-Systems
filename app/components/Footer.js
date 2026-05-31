@@ -289,7 +289,7 @@ export default function Footer() {
                     transition-colors
                   "
                 >
-                  health.firstmedsys@gmail.com
+                  sales@healthfirstmed.in
                 </a>
               </div>
 

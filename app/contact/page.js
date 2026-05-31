@@ -60,7 +60,7 @@ export default function ContactSection() {
             </h3>
 
             <p className="mt-3 text-blue-600 font-medium break-all">
-              health.firstmedsys@gmail.com
+              sales@healthfirstmed.in
             </p>
           </a>
 
@@ -182,7 +182,7 @@ export default function ContactSection() {
             </p>
 
             <p className="text-gray-600 mt-2">
-              health.firstmedsys@gmail.com
+              sales@healthfirstmed.in
             </p>
           </div>
 
