@@ -107,7 +107,7 @@ export default function HomePage() {
 
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
             <PrimaryButton text="Browse Products" link="/products" />
-            <PrimaryButton text="Talk to an Expert" link="/inquiry" variant="secondary" />
+            <PrimaryButton text="Talk to an Expert" link="/contact" variant="secondary" />
           </div>
 
           {/* Micro metrics segment anchors left layout flow */}
@@ -377,6 +377,20 @@ export default function HomePage() {
           }
         }
       `}</style>
+
+      <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "MedicalBusiness",
+      name: "Health First Medical Systems",
+      url: "https://healthfirstmed.in",
+      telephone: "+919920986401",
+      areaServed: "India",
+    }),
+  }}
+/>
     </main>
   );
 }

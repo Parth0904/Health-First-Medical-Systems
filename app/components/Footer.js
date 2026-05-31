@@ -51,14 +51,14 @@ export default function Footer() {
               max-w-2xl
               leading-relaxed
             ">
-              Browse our medical systems or submit an inquiry.
+              Browse our medical systems or contact us.
               Our team will help you identify the right equipment
               for your requirements.
             </p>
           </div>
 
           <Link
-            href="/inquiry"
+            href="/contact"
             className="
               shrink-0
 
@@ -81,7 +81,7 @@ export default function Footer() {
               transition-all duration-300
             "
           >
-            Send inquiry
+            Contact Us
           </Link>
         </motion.div>
 
@@ -211,15 +211,6 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/inquiry"
-                  className="hover:text-cyan-300 transition-colors"
-                >
-                  → inquiry
-                </Link>
-              </li>
-
-              <li>
-                <Link
                   href="/contact"
                   className="hover:text-cyan-300 transition-colors"
                 >
@@ -298,7 +289,7 @@ export default function Footer() {
                     transition-colors
                   "
                 >
-                  sales@healthfirstmed.in
+                  health.firstmedsys@gmail.com
                 </a>
               </div>
 
@@ -343,10 +334,10 @@ export default function Footer() {
             </Link>
 
             <Link
-              href="/inquiry"
+              href="/contact"
               className="hover:text-cyan-300 transition-colors"
             >
-              inquiry
+              Contact Us
             </Link>
 
             <Link

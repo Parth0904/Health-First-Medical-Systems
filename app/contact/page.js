@@ -60,7 +60,7 @@ export default function ContactSection() {
             </h3>
 
             <p className="mt-3 text-blue-600 font-medium break-all">
-              sales@healthfirstmed.in
+              health.firstmedsys@gmail.com
             </p>
           </a>
 
@@ -182,7 +182,7 @@ export default function ContactSection() {
             </p>
 
             <p className="text-gray-600 mt-2">
-              info@healthfirst.com
+              health.firstmedsys@gmail.com
             </p>
           </div>
 
@@ -226,13 +226,13 @@ export default function ContactSection() {
               text-blue-100
             "
           >
-            Skip traditional forms. Use our guided inquiry system
+            Visit our product page 
             and we'll help you find the right medical solution.
           </p>
 
           <div className="mt-8">
             <Link
-              href="/inquiry"
+              href="/products"
               className="
                 inline-flex items-center
 
@@ -250,7 +250,7 @@ export default function ContactSection() {
                 transition-all duration-300
               "
             >
-              Go To Inquiry
+              Go To Products
             </Link>
           </div>
         </div>

@@ -104,31 +104,6 @@ export default function Navbar() {
       </Link>
     ))}
   </div>
-
-  {/* SPECIAL INQUIRY BUTTON */}
-  <Link
-    href="/inquiry"
-    className="
-      group relative overflow-hidden
-      px-5 py-3 rounded-full
-      bg-linear-to-r from-blue-600 to-cyan-500
-      text-white font-semibold text-sm
-      shadow-lg shadow-blue-500/20
-      hover:scale-[1.03]
-      transition-all duration-300
-    "
-  >
-    <span className="relative z-10 flex items-center gap-2">
-       Inquiry
-    </span>
-
-    <div className="
-      absolute inset-0
-      bg-white/10
-      opacity-0 group-hover:opacity-100
-      transition-opacity duration-300
-    " />
-  </Link>
 </div>
 
           {/* Mobile Menu Button */}
@@ -242,22 +217,6 @@ export default function Navbar() {
                 <span className="text-gray-400">→</span>
               </Link>
             ))}
-
-            {/* INQUIRY BUTTON */}
-            <Link
-              href="/inquiry"
-              onClick={() => setIsOpen(false)}
-              className="
-                mt-4 flex items-center justify-center
-                gap-2
-                py-4 px-5 rounded-2xl
-                bg-linear-to-r from-blue-600 to-cyan-500
-                text-white font-semibold
-                shadow-lg
-              "
-            >
-               Send Inquiry
-            </Link>
           </div>
         </div>
       </motion.div>

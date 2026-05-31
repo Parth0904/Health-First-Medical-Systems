@@ -3,11 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, Check, Filter } from "lucide-react";
+import { createSlug } from "@/lib/createSlug";
+import Link from "next/link";
 import PageHero from "../components/Pagehero";
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState(["All"]);
@@ -20,8 +21,40 @@ export default function ProductsPage() {
   const searchInputRef = useRef(null);
   const productsGridRef = useRef(null);
 
+  function ProductSkeleton() {
+  return (
+    <div className="
+      relative
+      flex flex-col lg:flex-row
+      gap-8
+      max-w-[1400px]
+      mx-auto
+      animate-pulse
+    ">
+      <div className="w-full lg:w-[280px] bg-white rounded-3xl p-6 border">
+        <div className="h-6 bg-gray-200 rounded w-1/2 mb-6" />
+      </div>
+
+      <div className="flex-1">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-3xl border p-4"
+            >
+              <div className="h-[220px] bg-gray-200 rounded-2xl" />
+              <div className="h-4 bg-gray-200 rounded mt-4" />
+              <div className="h-4 bg-gray-200 rounded mt-2" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
   /* -------------------------------------------------------------------------- */
-  /*                                   FETCH                                    */
+  /* FETCH                                    */
   /* -------------------------------------------------------------------------- */
 
   useEffect(() => {
@@ -35,7 +68,7 @@ export default function ProductsPage() {
   }, []);
 
   /* -------------------------------------------------------------------------- */
-  /*                                FILTER LOGIC                                */
+  /* FILTER LOGIC                                */
   /* -------------------------------------------------------------------------- */
 
   const filteredProducts = products.filter((p) => {
@@ -55,27 +88,25 @@ export default function ProductsPage() {
   });
 
   /* -------------------------------------------------------------------------- */
-  /*                              SCROLL TO SECTION                             */
+  /* SCROLL TO SECTION                             */
   /* -------------------------------------------------------------------------- */
 
- useEffect(() => {
-  setSearchQuery("");
+  useEffect(() => {
+    setSearchQuery("");
 
-  productsGridRef.current?.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
-}, [selectedCategory]);
+    productsGridRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [selectedCategory]);
 
   /* -------------------------------------------------------------------------- */
-  /*                             CLOSE ON ESCAPE                                */
+  /* CLOSE ON ESCAPE                                */
   /* -------------------------------------------------------------------------- */
 
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === "Escape") {
-        if (selectedProduct) setSelectedProduct(null);
-
         if (isMobileFilterOpen) {
           setIsMobileFilterOpen(false);
         }
@@ -86,14 +117,14 @@ export default function ProductsPage() {
 
     return () =>
       document.removeEventListener("keydown", handleKeyDown);
-  }, [selectedProduct, isMobileFilterOpen]);
+  }, [isMobileFilterOpen]);
 
   /* -------------------------------------------------------------------------- */
-  /*                              LOCK BODY SCROLL                              */
+  /* LOCK BODY SCROLL                              */
   /* -------------------------------------------------------------------------- */
 
   useEffect(() => {
-    if (selectedProduct || isMobileFilterOpen) {
+    if (isMobileFilterOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -102,7 +133,7 @@ export default function ProductsPage() {
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [selectedProduct, isMobileFilterOpen]);
+  }, [isMobileFilterOpen]);
 
   return (
     <section
@@ -116,7 +147,7 @@ export default function ProductsPage() {
       "
     >
       {/* ------------------------------------------------------------------- */}
-      {/*                               HEADING                               */}
+      {/* HEADING                               */}
       {/* ------------------------------------------------------------------- */}
 
       <motion.div
@@ -126,41 +157,32 @@ export default function ProductsPage() {
         viewport={{ once: true }}
         className="mb-14 text-center"
       >
-      <PageHero
-  badge="Our Products"
-  title="Medical Systems & Diagnostic Equipment"
-  description="Explore our range of certified medical systems designed to support accurate diagnostics and better patient care."
-/>
+        <PageHero
+          badge="Our Products"
+          title="Medical Systems & Diagnostic Equipment"
+          description="Explore our range of certified medical systems designed to support accurate diagnostics and better patient care."
+        />
       </motion.div>
 
       {/* ------------------------------------------------------------------- */}
-      {/*                              LOADING                                */}
+      {/* LOADING                                */}
       {/* ------------------------------------------------------------------- */}
 
       {loading ? (
-        <div className="
-          flex justify-center items-center
-          min-h-[40vh]
-        ">
-          <div className="
-            w-12 h-12
-            border-4 border-blue-200
-            border-t-blue-600
-            rounded-full
-            animate-spin
-          " />
-        </div>
-      ) : (
-        <div className="
-          relative
-          flex flex-col lg:flex-row
-          gap-8
-          max-w-[1400px]
-          mx-auto
-        ">
+  <ProductSkeleton />
+) : (
+  <div
+    className="
+      relative
+      flex flex-col lg:flex-row
+      gap-8
+      max-w-[1400px]
+      mx-auto
+    "
+  >
 
           {/* =============================================================== */}
-          {/*                      MOBILE FILTER DRAWER                      */}
+          {/* MOBILE FILTER DRAWER                      */}
           {/* =============================================================== */}
 
           <AnimatePresence>
@@ -297,7 +319,7 @@ export default function ProductsPage() {
           </AnimatePresence>
 
           {/* =============================================================== */}
-          {/*                          DESKTOP SIDEBAR                       */}
+          {/* DESKTOP SIDEBAR                       */}
           {/* =============================================================== */}
 
           <aside className="
@@ -404,19 +426,19 @@ export default function ProductsPage() {
           </aside>
 
           {/* =============================================================== */}
-          {/*                           RIGHT SIDE                            */}
+          {/* RIGHT SIDE                            */}
           {/* =============================================================== */}
 
           <div
-  ref={productsGridRef}
-  className="
-    flex-1 flex flex-col
-    min-w-0
-  "
->
+            ref={productsGridRef}
+            className="
+              flex-1 flex flex-col
+              min-w-0
+            "
+          >
 
             {/* ----------------------------------------------------------- */}
-            {/*                         SEARCH BAR                         */}
+            {/* SEARCH BAR                         */}
             {/* ----------------------------------------------------------- */}
 
             <motion.div
@@ -632,7 +654,7 @@ export default function ProductsPage() {
             </motion.div>
 
             {/* ----------------------------------------------------------- */}
-            {/*                         PRODUCT GRID                       */}
+            {/* PRODUCT GRID                       */}
             {/* ----------------------------------------------------------- */}
 
             <motion.div
@@ -698,466 +720,86 @@ export default function ProductsPage() {
 
                 {/* PRODUCTS */}
 
-                {filteredProducts.map((prod, idx) => (
-                  <motion.div
-                    key={prod.Name + idx}
-                    onClick={() =>
-                      setSelectedProduct(prod)
-                    }
-                    initial={{
-                      opacity: 0,
-                    }}
-                    animate={{
-                      opacity: 1,
-                    }}
-                    exit={{
-                      opacity: 0,
-                    }}
-                    transition={{
-                      duration: 0.18,
-                    }}
-                    className="
-                      group
+               {filteredProducts.map((prod, idx) => (
+  <Link
+    key={idx}
+    href={`/products/${createSlug(prod.Name)}`}
+  >
+    <div
+      className="
+        group
+        bg-white
+        rounded-3xl
+        border border-gray-100
+        shadow-sm
+        hover:shadow-lg
+        hover:border-blue-100
+        transition-all duration-300
+        p-4
+        cursor-pointer
+        flex flex-col
+        h-full
+      "
+    >
+      <div
+        className="
+          relative overflow-hidden
+          rounded-2xl
+          mb-4
+          bg-gray-50
+        "
+      >
+        <img
+          src={prod["Image URL"]}
+          alt={prod.Name}
+          className="
+            object-cover
+            w-full
+            h-[220px]
+            group-hover:scale-105
+            transition-transform duration-500
+          "
+        />
 
-                      bg-white
+        <span
+  className="
+    absolute top-3 left-3
+    bg-white/95
+    px-3 py-1
+    text-xs font-bold
+    text-blue-700
+    rounded-full
+  "
+>
+  {prod.Category}
+</span>
+      </div>
 
-                      rounded-3xl
+      <h2 className="text-xs font-bold text-gray-400 uppercase mb-1">
+        {prod.Manufacturer || "BRAND"}
+      </h2>
 
-                      border border-gray-100
+      <h3 className="text-lg font-bold text-gray-900 mb-2">
+        {prod.Name}
+      </h3>
 
-                      shadow-sm
+      <p className="text-sm text-gray-500 line-clamp-2 grow">
+        {prod.Description}
+      </p>
 
-                     hover:shadow-lg
-                     hover:border-blue-100
-
-                      transition-all duration-300
-
-                      p-4
-
-                      cursor-pointer
-
-                      flex flex-col
-                    "
-                  >
-                    {/* IMAGE */}
-
-                    <div className="
-                      relative overflow-hidden
-                      rounded-2xl
-                      mb-4
-
-                      bg-gray-50
-                    ">
-                      <img
-                        src={prod["Image URL"]}
-                        alt={prod.Name}
-                        className="
-                          object-cover
-                          w-full h-[220px]
-
-                          group-hover:scale-105
-
-                          transition-transform duration-500
-                        "
-                        onError={(e) => {
-                          e.currentTarget.src =
-                            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2394a3b8' font-size='16' font-family='sans-serif'%3EImage not found%3C/text%3E%3C/svg%3E";
-                        }}
-                      />
-
-                      <span className="
-                        absolute top-3 left-3
-
-                        bg-white/95
-                        backdrop-blur-sm
-
-                        px-3 py-1
-
-                        text-xs font-bold
-                        text-blue-700
-
-                        rounded-full
-
-                        shadow-sm
-                      ">
-                        {prod.Category}
-                      </span>
-                    </div>
-
-                    {/* CONTENT */}
-
-                    <h2 className="
-                      text-xs font-bold
-                      text-gray-400
-
-                      uppercase tracking-wider
-
-                      mb-1
-                    ">
-                      {prod.Manufacturer || "BRAND"}
-                    </h2>
-
-                    <h3 className="
-                      text-lg font-bold
-                      text-gray-900
-
-                      leading-tight
-
-                      mb-2
-                    ">
-                      {prod.Name}
-                    </h3>
-
-                    <p className="
-                      text-sm text-gray-500
-
-                      line-clamp-2
-
-                      mb-4 grow
-                    ">
-                      {prod.Description}
-                    </p>
-
-                    <div className="
-                      mt-auto pt-4
-
-                      border-t border-gray-100
-
-                      flex items-center justify-between
-                    ">
-                      <span className="
-                        font-semibold
-                        text-blue-600
-
-                        group-hover:text-blue-700
-                      ">
-                        View Details →
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
+      <div className="mt-auto pt-4 border-t border-gray-100">
+        <span className="font-semibold text-blue-600">
+          View Specifications →
+        </span>
+      </div>
+    </div>
+  </Link>
+))}
               </AnimatePresence>
             </motion.div>
           </div>
         </div>
       )}
-      <AnimatePresence>
-  {selectedProduct && (
-    <>
-      {/* BACKDROP */}
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={() => setSelectedProduct(null)}
-        className="
-          fixed inset-0
-          bg-black/50
-          backdrop-blur-sm
-          z-100
-        "
-      />
-
-      {/* MODAL */}
-
-      <motion.div
-       initial={{
-  opacity: 0,
-  y: 20,
-}}
-animate={{
-  opacity: 1,
-  y: 0,
-}}
-exit={{
-  opacity: 0,
-  y: 20,
-}}
-transition={{
-  duration: 0.2,
-}}
-        className="
-          fixed
-
-          inset-x-4
-          top-1/2
-
-          -translate-y-1/2
-
-          max-w-4xl
-          mx-auto
-
-          z-101
-        "
-      >
-       <div
-  className="
-    bg-white
-
-    rounded-4xl
-
-    shadow-[0_25px_80px_rgba(0,0,0,0.18)]
-
-    border border-blue-100/50
-
-    overflow-hidden
-
-    max-h-[90vh]
-    overflow-y-auto
-  "
->
-  {/* CLOSE */}
-
-  <button
-    onClick={() => setSelectedProduct(null)}
-    className="
-      absolute
-      top-5
-      right-5
-
-      z-20
-
-      w-11
-      h-11
-
-      rounded-full
-
-      bg-white/95
-      backdrop-blur-xl
-
-      border border-gray-200
-
-      flex items-center justify-center
-
-      shadow-md
-
-      hover:bg-gray-50
-
-      transition-all duration-300
-    "
-  >
-    <X size={18} />
-  </button>
-
-  <div
-    className="
-      grid
-      lg:grid-cols-2
-    "
-  >
-    {/* LEFT IMAGE */}
-
-    <div
-      className="
-        bg-linear-to-br
-        from-blue-50
-        via-white
-        to-cyan-50
-
-        flex items-center justify-center
-
-        p-8 lg:p-12
-
-        min-h-80
-      "
-    >
-      <img
-        src={selectedProduct["Image URL"]}
-        alt={selectedProduct.Name}
-        className="
-          max-h-[420px]
-          w-full
-
-          object-contain
-
-          drop-shadow-xl
-        "
-      />
-    </div>
-
-    {/* RIGHT CONTENT */}
-
-    <div
-      className="
-        p-8 lg:p-10
-
-        flex flex-col
-      "
-    >
-      {/* CATEGORY */}
-
-      <div
-        className="
-          inline-flex
-          items-center
-
-          self-start
-
-          px-4 py-2
-
-          rounded-full
-
-          bg-blue-50
-
-          border border-blue-100
-
-          text-blue-700
-          text-sm
-          font-semibold
-        "
-      >
-        {selectedProduct.Category}
-      </div>
-
-      {/* NAME */}
-
-      <h2
-        className="
-          mt-5
-
-          text-3xl
-          lg:text-4xl
-
-          font-extrabold
-
-          text-gray-900
-
-          leading-tight
-        "
-      >
-        {selectedProduct.Name}
-      </h2>
-
-      {/* MANUFACTURER */}
-
-      {selectedProduct.Manufacturer && (
-        <div
-          className="
-            mt-3
-
-            text-sm
-
-            text-gray-500
-          "
-        >
-          Manufacturer
-          <span className="ml-2 font-semibold text-gray-800">
-            {selectedProduct.Manufacturer}
-          </span>
-        </div>
-      )}
-
-      {/* DESCRIPTION */}
-
-      <div
-        className="
-          mt-8
-
-          pt-8
-
-          border-t border-gray-100
-        "
-      >
-        <h3
-          className="
-            text-sm
-
-            font-bold
-
-            uppercase
-
-            tracking-wider
-
-            text-gray-400
-
-            mb-3
-          "
-        >
-          Product Overview
-        </h3>
-
-        <p
-          className="
-            text-gray-600
-
-            leading-relaxed
-          "
-        >
-          {selectedProduct.Description ||
-            "Detailed product information available upon request."}
-        </p>
-      </div>
-
-      {/* CTA */}
-
-      <div
-        className="
-          mt-auto
-
-          pt-10
-        "
-      >
-        <button
-          onClick={() => {
-            const params = new URLSearchParams({
-              product: selectedProduct.Name,
-              category: selectedProduct.Category || "",
-              brand:
-                selectedProduct.Manufacturer || "",
-            });
-
-            window.location.href =
-              `/inquiry?${params.toString()}`;
-          }}
-          className="
-            w-full
-
-            py-4
-
-            rounded-2xl
-
-            bg-linear-to-r
-            from-blue-600
-            to-cyan-500
-
-            text-white
-
-            font-semibold
-
-            shadow-lg
-            shadow-blue-500/20
-
-            hover:shadow-xl
-
-            transition-all duration-300
-          "
-        >
-          Send Inquiry
-        </button>
-
-        <p
-          className="
-            text-center
-
-            text-xs
-
-            text-gray-400
-
-            mt-3
-          "
-        >
-          Our team will assist you with specifications,
-          pricing and availability.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-      </motion.div>
-    </>
-  )}
-</AnimatePresence>
     </section>
   );
 }
