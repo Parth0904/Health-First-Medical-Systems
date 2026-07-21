@@ -40,8 +40,8 @@ export const metadata = {
     "Medical Equipment Supplier",
   ],
   alternates: {
-  canonical: "https://healthfirstmed.in",
-},
+    canonical: "https://healthfirstmed.in",
+  },
   openGraph: {
     title: "Health First Medical Systems",
     description:

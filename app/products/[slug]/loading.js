@@ -2,9 +2,7 @@ export default function Loading() {
   return (
     <section className="bg-[#f5f9ff] min-h-screen py-20 px-6">
       <div className="max-w-7xl mx-auto">
-
         <div className="grid lg:grid-cols-2 gap-12">
-
           <div className="h-[500px] bg-gray-200 rounded-3xl animate-pulse" />
 
           <div>
@@ -18,9 +16,7 @@ export default function Loading() {
 
             <div className="h-14 w-48 bg-gray-200 rounded-2xl animate-pulse" />
           </div>
-
         </div>
-
       </div>
     </section>
   );

@@ -1,33 +1,32 @@
-import ProductCard from "@/app/components/ProductCard";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createSlug } from "@/lib/createSlug";
-import { createCategorySlug } from "@/lib/createCategorySlug";
-
+import { createBrandSlug } from "@/lib/createBrandSlug";
 import { getProducts } from "@/lib/getProducts";
+import ProductCard from "@/app/components/ProductCard";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const products = await getProducts();
 
-  const categoryProducts = products.filter(
-    (p) => createCategorySlug(p.Category) === slug,
+  const brandProducts = products.filter(
+    (p) => p.Manufacturer && createBrandSlug(p.Manufacturer) === slug,
   );
 
-  if (!categoryProducts.length) {
+  if (!brandProducts.length) {
     return {
-      title: "Category Not Found",
+      title: "Brand Not Found",
     };
   }
 
-  const categoryName = categoryProducts[0].Category;
-  const titleText = `${categoryName} | Health First Medical Systems`;
-  const descText = `Browse premium ${categoryName} products and diagnostic medical equipment available from Health First Medical Systems.`;
+  const brandName = brandProducts[0].Manufacturer;
+  const titleText = `${brandName} Products | Health First Medical Systems`;
+  const descText = `Browse certified medical devices and diagnostic solutions from ${brandName} available at Health First Medical Systems.`;
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
     ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")
     : "https://healthfirstmed.in";
-  const absoluteUrl = `${baseUrl}/category/${slug}`;
+  const absoluteUrl = `${baseUrl}/brand/${slug}`;
   const ogImageUrl = `${baseUrl}/og-image.webp`;
 
   return {
@@ -47,7 +46,7 @@ export async function generateMetadata({ params }) {
       images: [
         {
           url: ogImageUrl,
-          alt: `${categoryName} category logo`,
+          alt: `${brandName} logo placeholder`,
         },
       ],
       type: "website",
@@ -61,20 +60,19 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function CategoryPage({ params }) {
+export default async function BrandPage({ params }) {
   const { slug } = await params;
-
   const products = await getProducts();
 
-  const categoryProducts = products.filter(
-    (p) => createCategorySlug(p.Category) === slug,
-  );
+  const brandProducts = products
+    .filter((p) => p.Manufacturer && createBrandSlug(p.Manufacturer) === slug)
+    .sort((a, b) => a.Name.localeCompare(b.Name));
 
-  if (!categoryProducts.length) {
+  if (!brandProducts.length) {
     notFound();
   }
 
-  const categoryName = categoryProducts[0].Category;
+  const brandName = brandProducts[0].Manufacturer;
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
     ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")
@@ -93,42 +91,42 @@ export default async function CategoryPage({ params }) {
       {
         "@type": "ListItem",
         position: 2,
-        name: "Products",
-        item: `${baseUrl}/products`,
+        name: "Brands",
+        item: `${baseUrl}/brand`,
       },
       {
         "@type": "ListItem",
         position: 3,
-        name: categoryName,
-        item: `${baseUrl}/category/${slug}`,
+        name: brandName,
+        item: `${baseUrl}/brand/${slug}`,
       },
     ],
   };
 
   return (
-    <section className="bg-slate-50/50 min-h-screen py-20 px-6">
+    <section className="bg-slate-50/50 min-h-screen py-20 px-6 mt-4">
       <div className="max-w-7xl mx-auto">
         <Link
           href="/products"
-          className="inline-flex items-center gap-2 text-blue-600 font-medium mb-6"
+          className="inline-flex items-center gap-2 text-blue-600 font-medium mb-6 hover:text-blue-700 transition duration-200"
         >
           ← Back to Products
         </Link>
 
-        <h1 className="text-5xl font-bold text-gray-900">{categoryName}</h1>
-
-        <p className="mt-4 text-gray-600 text-lg">
-          Explore all products under the
-          {` ${categoryName} `}
-          category.
-        </p>
+        <div className="space-y-4">
+          <h1 className="text-5xl font-bold text-gray-900">{brandName}</h1>
+          <p className="text-gray-600 text-lg">
+            Explore {brandProducts.length}{" "}
+            {brandProducts.length === 1 ? "product" : "products"} from{" "}
+            {brandName} available at Health First Medical Systems.
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-          {categoryProducts.map((product, idx) => (
+          {brandProducts.map((product, idx) => (
             <ProductCard key={idx} product={product} />
           ))}
         </div>
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

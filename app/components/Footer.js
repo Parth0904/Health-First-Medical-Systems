@@ -1,351 +1,168 @@
 "use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { Phone, Mail, MapPin } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="relative mt-24 overflow-hidden bg-linear-to-b from-blue-950 to-slate-950 text-gray-300">
-
-      {/* Background Glow */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-blue-600/10 blur-3xl rounded-full" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/10 blur-3xl rounded-full" />
-
+    <footer className="relative mt-24 bg-slate-900 border-t border-slate-800 text-slate-300">
       <div className="relative max-w-7xl mx-auto px-6 md:px-10 lg:px-16 py-16">
-
         {/* ====================================================== */}
         {/* CTA SECTION */}
         {/* ====================================================== */}
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="
-            mb-16
-            pb-12
-            border-b border-blue-900/50
-
-            flex flex-col lg:flex-row
-            items-center justify-between
-            gap-8
-          "
-        >
+        <div className="mb-16 pb-12 border-b border-slate-800 flex flex-col lg:flex-row items-center justify-between gap-8">
           <div>
-            <h2 className="
-              text-3xl md:text-4xl
-              font-bold
-              text-white
-              leading-tight
-            ">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-tight">
               Looking for the right
-              <span className="block text-cyan-400">
-                Medical Solution?
-              </span>
+              <span className="block text-blue-500">Medical Solution?</span>
             </h2>
 
-            <p className="
-              mt-3
-              text-blue-200
-              max-w-2xl
-              leading-relaxed
-            ">
-              Browse our medical systems or contact us.
-              Our team will help you identify the right equipment
-              for your requirements.
+            <p className="mt-3 text-slate-400 max-w-2xl text-sm leading-relaxed">
+              Browse our medical systems or contact us. Our team will help you
+              identify the right equipment for your requirements.
             </p>
           </div>
 
           <Link
             href="/contact"
-            className="
-              shrink-0
-
-              px-8 py-4
-
-              rounded-2xl
-
-              bg-linear-to-r
-              from-blue-500
-              to-cyan-500
-
-              text-white
-              font-semibold
-
-              shadow-lg shadow-cyan-500/20
-
-              hover:shadow-xl
-              hover:scale-[1.02]
-
-              transition-all duration-300
-            "
+            className="shrink-0 px-6 py-3 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs transition-all duration-300"
           >
             Contact Us
           </Link>
-        </motion.div>
+        </div>
 
         {/* ====================================================== */}
-        {/* MAIN FOOTER GRID */}
+        {/* MAIN FOOTER GRID (5 columns) */}
         {/* ====================================================== */}
-
-        <div className="
-          grid
-          grid-cols-1
-          md:grid-cols-2
-          lg:grid-cols-4
-          gap-12
-        ">
-
-          {/* BRAND */}
-
-          <div className="lg:col-span-2">
-
-            <h3 className="
-              text-3xl
-              font-extrabold
-              text-white
-              mb-4
-            ">
-              Health
-              <span className="text-cyan-400">
-                First
-              </span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
+          {/* COLUMN 1: BRAND INFORMATION */}
+          <div className="sm:col-span-2 md:col-span-3 lg:col-span-2 space-y-4">
+            <h3 className="text-2xl font-extrabold text-white">
+              Health<span className="text-blue-500">First</span>
             </h3>
-
-            <p className="
-              text-gray-400
-              leading-relaxed
-              max-w-md
-            ">
-              Delivering reliable medical systems, diagnostic
-              equipment and healthcare technology solutions for
-              hospitals, clinics and healthcare providers across India.
+            <p className="text-slate-400 leading-relaxed max-w-sm text-xs font-semibold">
+              Delivering reliable medical systems, diagnostic equipment and
+              healthcare technology solutions for hospitals, clinics and
+              healthcare providers across India.
             </p>
 
-            {/* TRUST BADGES */}
-
-            <div className="
-              flex flex-wrap
-              gap-3
-              mt-6
-            ">
-              <span className="
-                px-3 py-1.5
-                rounded-full
-                bg-blue-900/50
-                border border-blue-800
-                text-xs
-                font-medium
-                text-blue-200
-              ">
+            {/* Trust Badges */}
+            <div className="flex flex-wrap gap-2 pt-2">
+              <span className="px-2.5 py-1 rounded-sm bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
                 Trusted Supplier
               </span>
-
-              <span className="
-                px-3 py-1.5
-                rounded-full
-                bg-blue-900/50
-                border border-blue-800
-                text-xs
-                font-medium
-                text-blue-200
-              ">
-                Medical Systems
-              </span>
-
-              <span className="
-                px-3 py-1.5
-                rounded-full
-                bg-blue-900/50
-                border border-blue-800
-                text-xs
-                font-medium
-                text-blue-200
-              ">
-                Fast Support
+              <span className="px-2.5 py-1 rounded-sm bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+                Certified Quality
               </span>
             </div>
           </div>
 
-          {/* QUICK LINKS */}
-
+          {/* COLUMN 2: PRODUCTS */}
           <div>
-            <h4 className="
-              text-lg
-              font-semibold
-              text-white
-              mb-5
-            ">
-              Quick Links
+            <h4 className="text-xs font-bold text-white tracking-widest uppercase mb-5">
+              Products
             </h4>
-
-            <ul className="space-y-3">
-
-              <li>
-                <Link
-                  href="/"
-                  className="hover:text-cyan-300 transition-colors"
-                >
-                  → Home
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/about"
-                  className="hover:text-cyan-300 transition-colors"
-                >
-                  → About
-                </Link>
-              </li>
-
+            <ul className="space-y-3 text-xs font-semibold">
               <li>
                 <Link
                   href="/products"
-                  className="hover:text-cyan-300 transition-colors"
+                  className="text-slate-400 hover:text-white transition-colors"
                 >
-                  → Products
+                  All Products
                 </Link>
               </li>
-
               <li>
                 <Link
-                  href="/contact"
-                  className="hover:text-cyan-300 transition-colors"
+                  href="/category"
+                  className="text-slate-400 hover:text-white transition-colors"
                 >
-                  → Contact
+                  Categories Index
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/brand"
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Brands Index
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* CONTACT */}
-
+          {/* COLUMN 3: COMPANY */}
           <div>
-            <h4 className="
-              text-lg
-              font-semibold
-              text-white
-              mb-5
-            ">
+            <h4 className="text-xs font-bold text-white tracking-widest uppercase mb-5">
+              Company
+            </h4>
+            <ul className="space-y-3 text-xs font-semibold">
+              <li>
+                <Link
+                  href="/about"
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Contact Support
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* COLUMN 4: REACH US */}
+          <div className="space-y-4">
+            <h4 className="text-xs font-bold text-white tracking-widest uppercase">
               Reach Us
             </h4>
-
-            <div className="space-y-5 text-sm">
-
-              <div>
-                <p className="font-medium text-white mb-1">
-                  Address
-                </p>
-
-                <p className="text-gray-400 leading-relaxed">
-                  Shop No. 7,
-                  E11 Building,
-                  Madhuban Co-operative Society,
-                  Titwala,
-                  Thane,
-                  Maharashtra 421605
-                </p>
-              </div>
-
-              <div>
-                <p className="font-medium text-white mb-1">
-                  Proprietor
-                </p>
-
-                <p className="text-gray-400">
-                  Shankar Dattatraya Shinde
-                </p>
-              </div>
-
-              <div>
-                <p className="font-medium text-white mb-1">
-                  Phone
-                </p>
-
+            <ul className="space-y-3 text-xs font-semibold">
+              <li className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+                <span className="text-slate-400 leading-relaxed">
+                  Titwala East, Thane, Maharashtra, India
+                </span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-blue-500 shrink-0" />
                 <a
                   href="tel:+919920986401"
-                  className="
-                    text-gray-400
-                    hover:text-cyan-300
-                    transition-colors
-                  "
+                  className="text-slate-400 hover:text-white transition-colors"
                 >
                   +91 99209 86401
                 </a>
-              </div>
-
-              <div>
-                <p className="font-medium text-white mb-1">
-                  Email
-                </p>
-
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-blue-500 shrink-0" />
                 <a
-                  href="mailto:info@healthfirst.com"
-                  className="
-                    text-gray-400
-                    hover:text-cyan-300
-                    transition-colors
-                  "
+                  href="mailto:sales@healthfirstmed.in"
+                  className="text-slate-400 hover:text-white transition-colors break-all"
                 >
                   sales@healthfirstmed.in
                 </a>
-              </div>
-
-            </div>
+              </li>
+            </ul>
           </div>
         </div>
 
         {/* ====================================================== */}
         {/* BOTTOM BAR */}
         {/* ====================================================== */}
-
-        <div className="
-          mt-14
-          pt-6
-
-          border-t border-blue-900/50
-
-          flex flex-col md:flex-row
-          items-center justify-between
-
-          gap-4
-
-          text-sm
-          text-gray-500
-        ">
-
+        <div className="mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>
-            © {new Date().getFullYear()} Health First Medical Systems.
-            All rights reserved.
+            © {new Date().getFullYear()} Health First Medical Systems. All
+            rights reserved.
           </p>
-
-          <div className="
-            flex flex-wrap
-            items-center
-            gap-6
-          ">
-            <Link
-              href="/privacy"
-              className="hover:text-cyan-300 transition-colors"
-            >
-              Privacy Policy
-            </Link>
-
-            <Link
-              href="/contact"
-              className="hover:text-cyan-300 transition-colors"
-            >
-              Contact Us
-            </Link>
-
-            <Link
-              href="/products"
-              className="hover:text-cyan-300 transition-colors"
-            >
-              Products
-            </Link>
+          <div className="flex gap-6">
+            <span className="font-semibold text-slate-600">
+              B2B Distributor
+            </span>
+            <span className="font-semibold text-slate-600">
+              IndiaMART Trust Seal
+            </span>
           </div>
         </div>
       </div>

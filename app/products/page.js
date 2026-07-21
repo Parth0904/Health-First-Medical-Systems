@@ -1,11 +1,33 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, Check, Filter } from "lucide-react";
-import { createSlug } from "@/lib/createSlug";
+import ProductCard from "../components/ProductCard";
 import Link from "next/link";
 import PageHero from "../components/Pagehero";
+
+function ProductSkeleton() {
+  return (
+    <div className="relative flex flex-col lg:flex-row gap-8 max-w-[1400px] mx-auto animate-pulse">
+      <div className="w-full lg:w-[280px] bg-white rounded-3xl p-6 border">
+        <div className="h-6 bg-gray-200 rounded w-1/2 mb-6" />
+      </div>
+
+      <div className="flex-1">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="bg-white rounded-3xl border p-4">
+              <div className="h-[220px] bg-gray-200 rounded-2xl" />
+              <div className="h-4 bg-gray-200 rounded mt-4" />
+              <div className="h-4 bg-gray-200 rounded mt-2" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -20,38 +42,6 @@ export default function ProductsPage() {
 
   const searchInputRef = useRef(null);
   const productsGridRef = useRef(null);
-
-  function ProductSkeleton() {
-  return (
-    <div className="
-      relative
-      flex flex-col lg:flex-row
-      gap-8
-      max-w-[1400px]
-      mx-auto
-      animate-pulse
-    ">
-      <div className="w-full lg:w-[280px] bg-white rounded-3xl p-6 border">
-        <div className="h-6 bg-gray-200 rounded w-1/2 mb-6" />
-      </div>
-
-      <div className="flex-1">
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-3xl border p-4"
-            >
-              <div className="h-[220px] bg-gray-200 rounded-2xl" />
-              <div className="h-4 bg-gray-200 rounded mt-4" />
-              <div className="h-4 bg-gray-200 rounded mt-2" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
   /* -------------------------------------------------------------------------- */
   /* FETCH                                    */
@@ -68,32 +58,80 @@ export default function ProductsPage() {
   }, []);
 
   /* -------------------------------------------------------------------------- */
-  /* FILTER LOGIC                                */
+  /* FILTER LOGIC & WEIGHTED SEARCH             */
   /* -------------------------------------------------------------------------- */
 
-  const filteredProducts = products.filter((p) => {
-    const matchesCategory =
-      selectedCategory === "All" || p.Category === selectedCategory;
+  const filteredProducts = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return products.filter(
+        (p) => selectedCategory === "All" || p.Category === selectedCategory,
+      );
+    }
 
-    const q = searchQuery.toLowerCase();
+    const queryWords = searchQuery
+      .toLowerCase()
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
 
-    const matchesSearch =
-      !q ||
-      p.Name?.toLowerCase().includes(q) ||
-      p.Category?.toLowerCase().includes(q) ||
-      p.Manufacturer?.toLowerCase().includes(q) ||
-      p["Model Number"]?.toLowerCase().includes(q);
+    return products
+      .filter((p) => {
+        const matchesCategory =
+          selectedCategory === "All" || p.Category === selectedCategory;
+        if (!matchesCategory) return false;
 
-    return matchesCategory && matchesSearch;
-  });
+        const fields = {
+          name: p.Name?.toLowerCase() || "",
+          model: p["Model Number"]?.toLowerCase() || "",
+          manufacturer: p.Manufacturer?.toLowerCase() || "",
+          category: p.Category?.toLowerCase() || "",
+          description: p.Description?.toLowerCase() || "",
+        };
+
+        // Ensure every query word matches at least one field (Multi-word search / Partial matching)
+        return queryWords.every((word) => {
+          return (
+            fields.name.includes(word) ||
+            fields.model.includes(word) ||
+            fields.manufacturer.includes(word) ||
+            fields.category.includes(word) ||
+            fields.description.includes(word)
+          );
+        });
+      })
+      .map((p) => {
+        const fields = {
+          name: p.Name?.toLowerCase() || "",
+          model: p["Model Number"]?.toLowerCase() || "",
+          manufacturer: p.Manufacturer?.toLowerCase() || "",
+          category: p.Category?.toLowerCase() || "",
+          description: p.Description?.toLowerCase() || "",
+        };
+
+        // Calculate relevance score
+        let score = 0;
+        queryWords.forEach((word) => {
+          if (fields.name.includes(word)) score += 5;
+          if (fields.model.includes(word)) score += 4;
+          if (fields.manufacturer.includes(word)) score += 3;
+          if (fields.category.includes(word)) score += 2;
+          if (fields.description.includes(word)) score += 1;
+        });
+
+        return { product: p, score };
+      })
+      .sort(
+        (a, b) =>
+          b.score - a.score || a.product.Name.localeCompare(b.product.Name),
+      )
+      .map((item) => item.product);
+  }, [products, searchQuery, selectedCategory]);
 
   /* -------------------------------------------------------------------------- */
   /* SCROLL TO SECTION                             */
   /* -------------------------------------------------------------------------- */
 
   useEffect(() => {
-    setSearchQuery("");
-
     productsGridRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "start",
@@ -115,8 +153,7 @@ export default function ProductsPage() {
 
     document.addEventListener("keydown", handleKeyDown);
 
-    return () =>
-      document.removeEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isMobileFilterOpen]);
 
   /* -------------------------------------------------------------------------- */
@@ -138,13 +175,7 @@ export default function ProductsPage() {
   return (
     <section
       id="products"
-      className="
-        relative min-h-screen
-        bg-[#f5f9ff]
-        py-20
-        px-6 md:px-12 lg:px-20
-        mt-4
-      "
+      className="relative min-h-screen bg-[#f5f9ff] py-20 px-6 md:px-12 lg:px-20 mt-4"
     >
       {/* ------------------------------------------------------------------- */}
       {/* HEADING                               */}
@@ -169,18 +200,9 @@ export default function ProductsPage() {
       {/* ------------------------------------------------------------------- */}
 
       {loading ? (
-  <ProductSkeleton />
-) : (
-  <div
-    className="
-      relative
-      flex flex-col lg:flex-row
-      gap-8
-      max-w-[1400px]
-      mx-auto
-    "
-  >
-
+        <ProductSkeleton />
+      ) : (
+        <div className="relative flex flex-col lg:flex-row gap-8 max-w-[1400px] mx-auto">
           {/* =============================================================== */}
           {/* MOBILE FILTER DRAWER                      */}
           {/* =============================================================== */}
@@ -195,12 +217,7 @@ export default function ProductsPage() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsMobileFilterOpen(false)}
-                  className="
-                    fixed inset-0
-                    bg-slate-900/60
-                    backdrop-blur-sm
-                    z-40 lg:hidden
-                  "
+                  className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden"
                 />
 
                 {/* DRAWER */}
@@ -213,55 +230,18 @@ export default function ProductsPage() {
                     duration: 0.22,
                     ease: "easeOut",
                   }}
-                  className="
-                    fixed top-0 left-0 bottom-0
-                    w-[85%] max-w-[340px]
-
-                    bg-white/95
-                    backdrop-blur-2xl
-
-                    border-r border-white/40
-
-                    z-50
-                    overflow-hidden
-                    lg:hidden
-                  "
+                  className="fixed top-0 left-0 bottom-0 w-[85%] max-w-[340px] bg-white border-r border-slate-200 z-50 overflow-hidden lg:hidden"
                 >
                   {/* HEADER */}
 
-                  <div className="
-                    sticky top-0 z-20
-
-                    flex items-center justify-between
-
-                    px-6 py-5
-
-                    bg-white/95
-                    backdrop-blur-xl
-
-                    border-b border-gray-100
-                  ">
-                    <h3 className="
-                      text-xl font-bold text-gray-900
-                    ">
+                  <div className="sticky top-0 z-20 flex items-center justify-between px-6 py-5 bg-white/95 backdrop-blur-xl border-b border-gray-100">
+                    <h3 className="text-xl font-bold text-gray-900">
                       Categories
                     </h3>
 
                     <button
-                      onClick={() =>
-                        setIsMobileFilterOpen(false)
-                      }
-                      className="
-                        w-10 h-10 rounded-full
-
-                        bg-gray-100 hover:bg-gray-200
-
-                        flex items-center justify-center
-
-                        text-gray-600
-
-                        transition-all duration-300
-                      "
+                      onClick={() => setIsMobileFilterOpen(false)}
+                      className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-all duration-300"
                     >
                       <X size={18} />
                     </button>
@@ -269,44 +249,22 @@ export default function ProductsPage() {
 
                   {/* LIST */}
 
-                  <div className="
-                    overflow-y-auto
-                    h-full
-                    p-4
-                  ">
+                  <div className="overflow-y-auto h-full p-4">
                     <ul className="space-y-2">
                       {categories.map((cat) => (
                         <li key={cat}>
                           <button
                             onClick={() => {
                               setSelectedCategory(cat);
+                              setSearchQuery("");
                               setIsMobileFilterOpen(false);
                             }}
-                            className={`
-                              w-full
-
-                              flex items-center justify-between
-
-                              px-4 py-4
-                              rounded-2xl
-
-                              text-left text-sm font-medium
-
-                              transition-all duration-300
-
-                              ${selectedCategory === cat
-                                ? "bg-blue-50 text-blue-700 border border-blue-100"
-                                : "text-gray-600 hover:bg-gray-50"
-                              }
-                            `}
+                            className={`w-full flex items-center justify-between px-4 py-4 rounded-lg text-left text-sm font-medium transition-all duration-300 ${selectedCategory === cat ? "bg-blue-50 text-blue-700 border border-blue-100" : "text-gray-600 hover:bg-gray-50"}`}
                           >
                             <span>{cat}</span>
 
                             {selectedCategory === cat && (
-                              <Check
-                                size={18}
-                                className="text-blue-600"
-                              />
+                              <Check size={18} className="text-blue-600" />
                             )}
                           </button>
                         </li>
@@ -322,97 +280,34 @@ export default function ProductsPage() {
           {/* DESKTOP SIDEBAR                       */}
           {/* =============================================================== */}
 
-          <aside className="
-            hidden lg:block
-            w-64 shrink-0
-          ">
-            <div className="
-              sticky top-28
-
-              bg-white
-
-              rounded-3xl
-
-              border border-blue-100/60
-
-              shadow-[0_10px_40px_rgba(0,0,0,0.05)]
-
-              overflow-hidden
-            ">
-
+          <aside className="hidden lg:block w-64 shrink-0">
+            <div className="sticky top-28 bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
               {/* SIDEBAR HEADER */}
 
-              <div className="
-                sticky top-0 z-20
-
-                bg-white
-
-                px-6 pt-6 pb-4
-
-                border-b border-gray-100
-              ">
-                <h3 className="
-                  text-lg font-bold text-gray-900
-                ">
-                  Categories
-                </h3>
+              <div className="sticky top-0 z-20 bg-white px-6 pt-6 pb-4 border-b border-gray-100">
+                <h3 className="text-lg font-bold text-gray-900">Categories</h3>
               </div>
 
               {/* CATEGORY LIST */}
 
-              <div className="
-                max-h-[calc(100vh-12rem)]
-                overflow-y-auto
-                p-4
-              ">
+              <div className="max-h-[calc(100vh-12rem)] overflow-y-auto p-4">
                 <ul className="space-y-1">
                   {categories.map((cat) => (
                     <li key={cat}>
                       <button
-                        onClick={() =>
-                          setSelectedCategory(cat)
-                        }
-                        className={`
-                          w-full
-
-                          flex items-center justify-between
-
-                          px-4 py-3
-                          rounded-2xl
-
-                          text-sm
-
-                          transition-all duration-300
-
-                          ${selectedCategory === cat
-                            ? "bg-blue-50 text-blue-700 border border-blue-100"
-                            : "text-gray-600 hover:bg-gray-50"
-                          }
-                        `}
+                        onClick={() => {
+                          setSelectedCategory(cat);
+                          setSearchQuery("");
+                        }}
+                        className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm transition-all duration-300 ${selectedCategory === cat ? "bg-blue-50 text-blue-700 font-bold" : "text-gray-600 hover:bg-slate-50 hover:text-slate-900"}`}
                       >
-                        <div className="
-                          flex items-center justify-between
-                          w-full
-                        ">
-                          <span className="font-medium">
-                            {cat}
-                          </span>
+                        <div className="flex items-center justify-between w-full">
+                          <span className="font-medium">{cat}</span>
 
-                          <span className="
-                            text-[11px]
-                            px-2 py-1
-                            rounded-full
-
-                            bg-gray-100
-
-                            text-gray-500
-                            font-semibold
-                          ">
+                          <span className="text-[11px] px-2 py-1 rounded-full bg-gray-100 text-gray-500 font-semibold">
                             {
                               products.filter(
-                                (p) =>
-                                  cat === "All" ||
-                                  p.Category === cat
+                                (p) => cat === "All" || p.Category === cat,
                               ).length
                             }
                           </span>
@@ -429,14 +324,7 @@ export default function ProductsPage() {
           {/* RIGHT SIDE                            */}
           {/* =============================================================== */}
 
-          <div
-            ref={productsGridRef}
-            className="
-              flex-1 flex flex-col
-              min-w-0
-            "
-          >
-
+          <div ref={productsGridRef} className="flex-1 flex flex-col min-w-0">
             {/* ----------------------------------------------------------- */}
             {/* SEARCH BAR                         */}
             {/* ----------------------------------------------------------- */}
@@ -448,77 +336,25 @@ export default function ProductsPage() {
                 duration: 0.3,
                 ease: "easeInOut",
               }}
-              className="
-                sticky top-16 z-30
-
-                pt-4 pb-6
-
-                bg-[#f5f9ff]/95
-                backdrop-blur-xl
-              "
+              className="sticky top-16 z-30 pt-4 pb-6 bg-[#f5f9ff]/95 backdrop-blur-xl"
             >
-              <div className="
-                rounded-[28px]
-
-                border border-blue-100/60
-
-                bg-white
-
-                shadow-[0_12px_40px_rgba(37,99,235,0.08)]
-
-                p-5
-              ">
-
+              <div className="rounded-xl border border-slate-200/80 bg-white shadow-xs p-4">
                 {/* SEARCH ROW */}
 
-                <div className="
-                  flex items-center
-                  gap-3
-                ">
-
+                <div className="flex items-center gap-3">
                   {/* MOBILE FILTER BTN */}
 
                   <button
-                    onClick={() =>
-                      setIsMobileFilterOpen(true)
-                    }
-                    className="
-                      lg:hidden
-
-                      w-16 h-16
-                      rounded-2xl
-
-                      bg-slate-900
-
-                      text-white
-
-                      flex items-center justify-center
-
-                      shadow-lg
-
-                      active:scale-95
-
-                      transition-all duration-300
-
-                      shrink-0
-                    "
+                    onClick={() => setIsMobileFilterOpen(true)}
+                    className="lg:hidden w-14 h-14 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-lg active:scale-95 transition-all duration-300 shrink-0"
                   >
                     <Filter size={22} />
                   </button>
 
                   {/* SEARCH INPUT */}
 
-                  <div className="
-                    relative flex-1
-                  ">
-                    <div className="
-                      absolute left-5 top-1/2
-                      -translate-y-1/2
-
-                      text-gray-400
-
-                      pointer-events-none
-                    ">
+                  <div className="relative flex-1">
+                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                       <Search size={22} />
                     </div>
 
@@ -527,38 +363,8 @@ export default function ProductsPage() {
                       type="text"
                       placeholder="Search products, brands, model numbers..."
                       value={searchQuery}
-                      onChange={(e) =>
-                        setSearchQuery(e.target.value)
-                      }
-                      className="
-                        w-full h-16
-
-                        pl-14 pr-12
-
-                        rounded-2xl
-
-                        bg-linear-to-b
-                        from-white
-                        to-blue-50/40
-
-                        border border-blue-100
-
-                        shadow-inner
-
-                        focus:bg-white
-                        focus:border-blue-500
-                        focus:ring-4
-                        focus:ring-blue-500/10
-
-                        outline-none
-
-                        text-gray-800
-                        text-[15px]
-
-                        placeholder:text-gray-400
-
-                        transition-all duration-300
-                      "
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full h-14 pl-14 pr-12 rounded-lg bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 outline-none text-gray-800 text-sm placeholder:text-gray-400 transition-all duration-300"
                     />
 
                     {/* CLEAR BUTTON */}
@@ -583,20 +389,7 @@ export default function ProductsPage() {
 
                             searchInputRef.current?.focus();
                           }}
-                          className="
-                            absolute right-4 top-1/2
-                            -translate-y-1/2
-
-                            w-8 h-8 rounded-full
-
-                            bg-gray-200 hover:bg-gray-300
-
-                            flex items-center justify-center
-
-                            text-gray-600
-
-                            transition-all duration-300
-                          "
+                          className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-600 transition-all duration-300"
                         >
                           <X size={15} />
                         </motion.button>
@@ -608,42 +401,16 @@ export default function ProductsPage() {
                 {/* ACTIVE FILTER */}
 
                 {selectedCategory !== "All" && (
-                  <div className="
-                    mt-4
-                    flex items-center gap-2
-                  ">
-                    <div className="
-                      inline-flex items-center gap-2
-
-                      px-4 py-2
-                      rounded-full
-
-                      bg-linear-to-r
-                      from-blue-600
-                      to-cyan-500
-
-                      text-white
-                      text-sm font-semibold
-
-                      shadow-lg
-                      shadow-blue-500/20
-                    ">
+                  <div className="mt-4 flex items-center gap-2">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-blue-600 to-cyan-500 text-white text-sm font-semibold shadow-lg shadow-blue-500/20">
                       {selectedCategory}
 
                       <button
-                        onClick={() =>
-                          setSelectedCategory("All")
-                        }
-                        className="
-                          w-5 h-5 rounded-full
-
-                          bg-white/20
-                          hover:bg-white/30
-
-                          flex items-center justify-center
-
-                          transition-all duration-200
-                        "
+                        onClick={() => {
+                          setSelectedCategory("All");
+                          setSearchQuery("");
+                        }}
+                        className="w-5 h-5 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all duration-200"
                       >
                         <X size={12} />
                       </button>
@@ -653,22 +420,37 @@ export default function ProductsPage() {
               </div>
             </motion.div>
 
+            {/* SEARCH RESULTS COUNTER */}
+            <div className="mb-6 px-2 text-xs font-semibold text-gray-400 tracking-wider uppercase">
+              {searchQuery || selectedCategory !== "All" ? (
+                <span>
+                  Showing{" "}
+                  <span className="text-blue-600 font-bold">
+                    {filteredProducts.length}
+                  </span>{" "}
+                  of{" "}
+                  <span className="text-gray-900 font-bold">
+                    {products.length}
+                  </span>{" "}
+                  products
+                </span>
+              ) : (
+                <span>
+                  Showing{" "}
+                  <span className="text-gray-900 font-bold">
+                    {products.length}
+                  </span>{" "}
+                  products
+                </span>
+              )}
+            </div>
+
             {/* ----------------------------------------------------------- */}
             {/* PRODUCT GRID                       */}
             {/* ----------------------------------------------------------- */}
 
-            <motion.div
-              className="
-                grid
-                grid-cols-1
-                sm:grid-cols-2
-                lg:grid-cols-2
-                xl:grid-cols-3
-                gap-6
-              "
-            >
+            <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               <AnimatePresence>
-
                 {/* EMPTY STATE */}
 
                 {filteredProducts.length === 0 && (
@@ -676,42 +458,41 @@ export default function ProductsPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="
-                      col-span-full
-
-                      py-20
-
-                      flex flex-col
-                      items-center justify-center
-
-                      text-center
-                    "
+                    className="col-span-full py-16 px-6 bg-white border border-gray-100/70 rounded-3xl shadow-xs flex flex-col items-center justify-center text-center max-w-md mx-auto mt-6"
                   >
-                    <Search
-                      size={48}
-                      className="text-gray-300 mb-4"
-                    />
+                    <div className="w-16 h-16 rounded-full bg-blue-50/50 flex items-center justify-center text-blue-600 mb-6 border border-blue-100/50">
+                      <Search size={28} />
+                    </div>
 
-                    <p className="
-                      text-lg text-gray-500
-                    ">
-                      No products found matching
-                      {" "}
-                      "{searchQuery}"
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      No products found
+                    </h3>
+                    <p className="text-sm text-gray-500 max-w-xs mb-6">
+                      Try searching by:
                     </p>
 
+                    <ul className="text-xs text-left text-gray-500 space-y-2.5 bg-gray-50/60 border border-gray-100/50 px-6 py-4 rounded-2xl mb-8 w-full max-w-xs">
+                      <li className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                        Product Name
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                        Model Number
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                        Manufacturer
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                        Category
+                      </li>
+                    </ul>
+
                     <button
-                      onClick={() =>
-                        setSearchQuery("")
-                      }
-                      className="
-                        mt-4
-
-                        text-blue-600
-                        font-medium
-
-                        hover:underline
-                      "
+                      onClick={() => setSearchQuery("")}
+                      className="px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs tracking-wider uppercase transition-all duration-300 shadow-md shadow-blue-600/10 active:scale-95 cursor-pointer"
                     >
                       Clear search
                     </button>
@@ -720,81 +501,9 @@ export default function ProductsPage() {
 
                 {/* PRODUCTS */}
 
-               {filteredProducts.map((prod, idx) => (
-  <Link
-    key={idx}
-    href={`/products/${createSlug(prod.Name)}`}
-  >
-    <div
-      className="
-        group
-        bg-white
-        rounded-3xl
-        border border-gray-100
-        shadow-sm
-        hover:shadow-lg
-        hover:border-blue-100
-        transition-all duration-300
-        p-4
-        cursor-pointer
-        flex flex-col
-        h-full
-      "
-    >
-      <div
-        className="
-          relative overflow-hidden
-          rounded-2xl
-          mb-4
-          bg-gray-50
-        "
-      >
-        <img
-          src={prod["Image URL"]}
-          alt={prod.Name}
-          className="
-            object-cover
-            w-full
-            h-[220px]
-            group-hover:scale-105
-            transition-transform duration-500
-          "
-        />
-
-        <span
-  className="
-    absolute top-3 left-3
-    bg-white/95
-    px-3 py-1
-    text-xs font-bold
-    text-blue-700
-    rounded-full
-  "
->
-  {prod.Category}
-</span>
-      </div>
-
-      <h2 className="text-xs font-bold text-gray-400 uppercase mb-1">
-        {prod.Manufacturer || "BRAND"}
-      </h2>
-
-      <h3 className="text-lg font-bold text-gray-900 mb-2">
-        {prod.Name}
-      </h3>
-
-      <p className="text-sm text-gray-500 line-clamp-2 grow">
-        {prod.Description}
-      </p>
-
-      <div className="mt-auto pt-4 border-t border-gray-100">
-        <span className="font-semibold text-blue-600">
-          View Specifications →
-        </span>
-      </div>
-    </div>
-  </Link>
-))}
+                {filteredProducts.map((prod, idx) => (
+                  <ProductCard key={idx} product={prod} />
+                ))}
               </AnimatePresence>
             </motion.div>
           </div>
