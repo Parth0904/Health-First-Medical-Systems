@@ -3,8 +3,10 @@ import Link from "next/link";
 import { createSlug } from "@/lib/createSlug";
 
 export default function ProductCard({ product }) {
+  const productSlug = product.slug || createSlug(product.Name);
+
   return (
-    <Link href={`/products/${createSlug(product.Name)}`}>
+    <Link href={`/products/${productSlug}`}>
       <div className="group bg-white rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md hover:border-blue-600 transition-all duration-300 p-4 cursor-pointer flex flex-col h-full">
         <div className="relative overflow-hidden rounded-lg mb-4 bg-slate-50">
           <div className="relative w-full h-[220px] overflow-hidden rounded-lg">

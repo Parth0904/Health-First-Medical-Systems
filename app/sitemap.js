@@ -10,7 +10,7 @@ export default async function sitemap() {
   const products = await getProducts();
 
   const productUrls = products.map((product) => ({
-    url: `${baseUrl}/products/${createSlug(product.Name)}`,
+    url: `${baseUrl}/products/${product.slug || createSlug(product.Name)}`,
     lastModified: new Date(),
     changeFrequency: "weekly",
     priority: 0.8,

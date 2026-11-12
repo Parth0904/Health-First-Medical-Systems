@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const products = await getProducts();
 
-  const product = products.find((p) => createSlug(p.Name) === slug);
+  const product = products.find((p) => (p.slug || createSlug(p.Name)) === slug);
 
   if (!product) {
     return {
@@ -53,7 +53,8 @@ export async function generateMetadata({ params }) {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
     ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")
     : "https://healthfirstmed.in";
-  const absoluteUrl = `${baseUrl}/products/${createSlug(product.Name)}`;
+  const productSlug = product.slug || createSlug(product.Name);
+  const absoluteUrl = `${baseUrl}/products/${productSlug}`;
   const imageUrl = !isFieldEmpty(product["Image URL"])
     ? product["Image URL"]
     : `${baseUrl}/og-image.webp`;
@@ -94,7 +95,7 @@ export default async function ProductPage({ params }) {
 
   const products = await getProducts();
 
-  const product = products.find((p) => createSlug(p.Name) === slug);
+  const product = products.find((p) => (p.slug || createSlug(p.Name)) === slug);
 
   if (!product) {
     notFound();
@@ -133,7 +134,8 @@ export default async function ProductPage({ params }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
     ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")
     : "https://healthfirstmed.in";
-  const absoluteUrl = `${siteUrl}/products/${createSlug(product.Name)}`;
+  const productSlug = product.slug || createSlug(product.Name);
+  const absoluteUrl = `${siteUrl}/products/${productSlug}`;
   productSchema.url = absoluteUrl;
 
   const rawPrice = product.Price;
@@ -253,7 +255,7 @@ export default async function ProductPage({ params }) {
 
             <ProductWhatsAppButton
               productName={product.Name}
-              productUrl={`/products/${createSlug(product.Name)}`}
+              productUrl={`/products/${productSlug}`}
             />
           </div>
         </div>
@@ -267,8 +269,8 @@ export default async function ProductPage({ params }) {
             <div className="grid md:grid-cols-3 gap-6">
               {relatedProducts.map((item) => (
                 <Link
-                  key={item.Name}
-                  href={`/products/${createSlug(item.Name)}`}
+                  key={item.slug || item.id || item.Name}
+                  href={`/products/${item.slug || createSlug(item.Name)}`}
                   className="bg-white rounded-3xl border p-4 hover:shadow-lg transition-all"
                 >
                   <div className="relative w-full h-48 overflow-hidden rounded-2xl">
@@ -332,7 +334,7 @@ export default async function ProductPage({ params }) {
         </section>
         <MobileContactBar
           productName={product.Name}
-          productUrl={`/products/${createSlug(product.Name)}`}
+          productUrl={`/products/${productSlug}`}
         />
 
         <script
