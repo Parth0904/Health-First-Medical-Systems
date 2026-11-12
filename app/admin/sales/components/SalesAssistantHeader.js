@@ -1,5 +1,6 @@
 import { MessageSquareText } from "lucide-react";
 import LogoutButton from "../LogoutButton";
+import SalesPwaControls from "./SalesPwaControls";
 
 export default function SalesAssistantHeader({ session }) {
   return (
@@ -37,7 +38,8 @@ export default function SalesAssistantHeader({ session }) {
           <LogoutButton />
         </div>
       </div>
+
+      <SalesPwaControls />
     </header>
   );
 }
-

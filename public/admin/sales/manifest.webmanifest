@@ -1,0 +1,33 @@
+{
+  "id": "/admin/sales/",
+  "name": "Health First Sales",
+  "short_name": "HF Sales",
+  "description": "Internal sales assistant for Health First Medical Systems.",
+  "start_url": "/admin/sales/",
+  "scope": "/admin/sales/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#2563eb",
+  "background_color": "#f8fafc",
+  "icons": [
+    {
+      "src": "/admin/sales/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/admin/sales/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/admin/sales/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
+
